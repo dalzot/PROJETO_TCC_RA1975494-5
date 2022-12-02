@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "956921715561",
+    "project_id": "hey-jobs",
+    "storage_bucket": "hey-jobs.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:956921715561:android:ff4de2c386ed81f3af3bf8",
+        "android_client_info": {
+          "package_name": "com.zotinfo.heyjobs"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "956921715561-9or6qotet6tlld060p2hnraj2jn4ie21.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zotinfo.heyjobs",
+            "certificate_hash": "9de5495350775a481b351a68999565cee527f9df"
+          }
+        },
+        {
+          "client_id": "956921715561-ecgfetlaqt0fvscuk3009srsmldj2mdg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zotinfo.heyjobs",
+            "certificate_hash": "ea43ca9c6b582cd198ccbd973f39fff3957914ec"
+          }
+        },
+        {
+          "client_id": "956921715561-k23bklo2jn9j5pjs0gqqmm53gu45otch.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqNVl-jfCIIiWa6k8l-_W3Z4iyxtlfgFk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "956921715561-k23bklo2jn9j5pjs0gqqmm53gu45otch.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

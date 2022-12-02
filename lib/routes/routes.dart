@@ -1,0 +1,33 @@
+export 'package:get/get.dart';
+
+export 'package:delivery_servicos/app/modules/announce/announce_details_page.dart';
+export 'package:delivery_servicos/app/modules/profile/profile_page.dart';
+export 'package:delivery_servicos/app/modules/settings/binding/settings_binding.dart';
+export 'package:delivery_servicos/app/modules/settings/settings_page.dart';
+export 'package:delivery_servicos/app/modules/sign_forgot_pass/binding/forgot_password_binding.dart';
+export 'package:delivery_servicos/app/modules/sign_forgot_pass/forgot_password_page.dart';
+export 'package:delivery_servicos/app/modules/announce/binding/announce_binding.dart';
+export 'package:delivery_servicos/app/modules/chat/binding/chat_binding.dart';
+export 'package:delivery_servicos/app/modules/chat/chat_page.dart';
+export 'package:delivery_servicos/app/modules/saveds/binding/saveds_binding.dart';
+export 'package:delivery_servicos/app/modules/saveds/saveds_page.dart';
+
+export '../app/modules/chat/chat_details.dart';
+export '../app/modules/edit_profile/binding/edit_profile_binding.dart';
+export '../app/modules/edit_profile/edit_client_page.dart';
+export '../app/modules/edit_profile/edit_professional_page.dart';
+export '../app/modules/sign_up/binding/sign_up_binding.dart';
+export '../app/modules/announce/my_requests_page.dart';
+export '../app/modules/announce/my_services_page.dart';
+export '../app/modules/sign_up/sign_up_client_page.dart';
+export '../app/modules/sign_up/sign_up_page.dart';
+export '../app/modules/sign_up/sign_up_professional_page.dart';
+export '../app/modules/profile/professional_details_page.dart';
+export '../app/modules/home/binding/home_binding.dart';
+export '../app/modules/home/home_page.dart';
+export '../app/modules/profile/binding/profile_binding.dart';
+export '../app/modules/profile/client_details_page.dart';
+export '../app/modules/sign_in/binding/sign_in_binding.dart';
+export '../app/modules/sign_in/sign_in_page.dart';
+export '../app/modules/splash/binding/splash_binding.dart';
+export '../app/modules/splash/splash_page.dart';
