@@ -1,4 +1,3 @@
-import 'package:delivery_servicos/app/global/widgets/buttons/action_button_widget.dart';
 import 'package:delivery_servicos/app/global/widgets/lists/global_list_view_widget.dart';
 import 'package:delivery_servicos/core/theme/app_color.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,6 @@ import 'package:get/get.dart';
 import '../../../routes/app_pages.dart';
 import '../../global/constants/constants.dart';
 import '../../global/constants/styles_const.dart';
-import '../../global/widgets/body/custom_scaffold.dart';
 import '../../global/widgets/textfields/password_field_widget.dart';
 import '../../global/widgets/textfields/text_field_widget.dart';
 import 'controller/sign_up_controller.dart';
@@ -93,7 +91,6 @@ class SignUpPage extends GetView<SignUpController> {
                           type: TextInputType.text,
                           controller: controller.nameController,
                           icon: const Icon(Icons.person_rounded),
-//                          onChanged: controller.setNameTemp,
                           validator: (String value)
                           => value.length < 6 || !value.trim().contains(' ')
                               ? 'Informe seu nome completo' : null),
@@ -102,7 +99,6 @@ class SignUpPage extends GetView<SignUpController> {
                           type: TextInputType.text,
                           controller: controller.emailController,
                           icon: const Icon(Icons.mail_rounded),
-//                          onChanged: controller.setEmailTemp,
                           inputFormatter: [
                             FilteringTextInputFormatter.deny(RegExp('[ ]')),
                           ],

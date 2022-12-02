@@ -150,8 +150,8 @@ class HomeController extends GetxController {
         .where("addressCEP", isEqualTo: cep)
         .where("profileType", isEqualTo: 'profissional')
         .orderBy("rate", descending: true)
-        .where("firebaseId", isNotEqualTo: userLogged.firebaseId)
-        .orderBy("rate", descending: true)
+//        .where("firebaseId", isNotEqualTo: userLogged.firebaseId)
+//        .orderBy("rate", descending: true)
         .limit(20).get();
 
     await handleFilterDocs(queryResult.docs);
@@ -297,6 +297,7 @@ class HomeController extends GetxController {
     try {
       filteredProfessionals.value = results
           .map((e) => ProfileModel.fromJson(e.data() as Map<String, dynamic>)).toList();
+      filteredProfessionals.removeWhere((p) => p.firebaseId == userLogged.firebaseId);
       filteredProfessionalsCache = filteredProfessionals;
     } catch(e,st) {
       printException('handleFilterDocs', e, st);

@@ -23,148 +23,142 @@ class PersonalFormTabWidget extends StatelessWidget {
       key: formKey,
       onChanged: () => controller.validatePersonalForm(formKey.currentState),
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      child: Padding(
-          padding: const EdgeInsets.symmetric(
-              horizontal: defaultPadding16 / 2, vertical: defaultPadding16),
-          child: Column(
-            children: [
-              const SizedBox(height: defaultPadding16),
-              Text('Muito bem, você está à um passo de se tornar um Profissional no HeyJobs!',
-                  textAlign: TextAlign.justify,
-                  style: appStyle.titleMedium?.copyWith(fontWeight: FontWeight.w500)),
-              const SizedBox(height: defaultPadding16),
-              RichText(
-                textAlign: TextAlign.justify,
-                text: TextSpan(
-                  text: 'Para isso, precisamos coletar mais algumas informações sobre você',
+      child: Column(
+        children: [
+          const SizedBox(height: defaultPadding16),
+          Text('Muito bem, você está à um passo de se tornar um Profissional no HeyJobs!',
+              textAlign: TextAlign.justify,
+              style: appStyle.titleMedium?.copyWith(fontWeight: FontWeight.w500)),
+          const SizedBox(height: defaultPadding16),
+          RichText(
+            textAlign: TextAlign.justify,
+            text: TextSpan(
+              text: 'Para isso, precisamos coletar mais algumas informações sobre você',
+              style: appStyle.bodySmall,
+              children: <TextSpan>[
+                TextSpan(text: ' ${controller.nameController.text}',
+                  style: appStyle.bodySmall?.copyWith(
+                      color: appNormalPrimaryColor, fontWeight: FontWeight.w500),
+                ),
+                TextSpan(text: '.\n\nPreencha as informações abaixo para continuar.',
                   style: appStyle.bodySmall,
-                  children: <TextSpan>[
-                    TextSpan(text: ' ${controller.nameController.text}',
-                      style: appStyle.bodySmall?.copyWith(
-                          color: appNormalPrimaryColor, fontWeight: FontWeight.w500),
-                    ),
-                    TextSpan(text: '.\n\nPreencha as informações abaixo para continuar.',
-                      style: appStyle.bodySmall,
-                    ),
-                  ],
                 ),
-              ),
-              const SizedBox(height: defaultPadding16/2),
-              TextFieldWidget(
-                  label: "CPF",
-                  hintText: '000.000.000-00',
-                  type: const TextInputType.numberWithOptions(),
-                  controller: controller.cpfController,
-                  icon: const Icon(Icons.badge),
-                  inputFormatter: [
-                    maskFormatterCpf,
-                    FilteringTextInputFormatter.deny(RegExp('[ ]')),
-                  ],
-                  validator: (String value) {
-                    return controller.validatorDocId(value);
-                  }),
-              Row(
-                children: [
-                  Expanded(
-                    flex: 4,
-                    child: TextFieldWidget(
-                        label: "RG",
-                        hintText: '0.000.000 (-0)',
-                        type: const TextInputType.numberWithOptions(),
-                        controller: controller.rgController,
-                        icon: const Icon(Icons.badge),
-                        inputFormatter: [
-                          maskFormatterRG,
-                          FilteringTextInputFormatter.deny(RegExp('[ ]')),
-                        ],
-                        validator: (String value) => value.length < 9
-                            ? 'Informe um RG válido' : null),
-                  ),
-                  const SizedBox(width: 8,),
-                  Expanded(
-                    flex: 2,
-                    child: TextFieldWidget(
-                        label: "SSP/**",
-                        hintText: 'SSP/**',
-                        type: TextInputType.text,
-                        controller: controller.rgEmitController,
-                        textCapitalization: TextCapitalization.characters,
-                        inputFormatter: [
-                          maskFormatterRGEmit,
-                          FilteringTextInputFormatter.deny(RegExp('[ ]')),
-                        ],
-                        validator: (String value) => value.length < 6
-                            ? 'Informe um SSP válido' : null),
-                  ),
-                ],
-              ),
-              TextFieldWidget(
-                  label: "Data de Nascimento",
-                  hintText: '01/01/1990',
-                  type: TextInputType.number,
-                  controller: controller.birthdayController,
-                  icon: const Icon(Icons.today_rounded),
-                  inputFormatter: [
-                    maskFormatterDate,
-                  ],
-                  validator: (String value) => value.length != 10
-                      ? 'Informe uma data válida' : compareDateFromNow(value)
-                      ? 'Você precisa ter mais de 18 anos' : null),
-              TextFieldWidget(
-                  label: "Número Principal",
-                  hintText: '(49) 9 1234-5678',
-                  type: TextInputType.number,
-                  controller: controller.phoneController,
-                  icon: const Icon(Icons.local_phone_rounded),
-                  inputFormatter: [
-                    maskFormatterPhone,
-                  ],
-                  validator: (String value) => value.length != 16
-                      ? 'Informe um número válido' : null),
-              Obx(() => TextFieldWidget(
-                    label: "Número Opcional",
-                    hintText: '(49) 9 1234-5678',
-                    type: TextInputType.number,
-                    controller: controller.phone2Controller,
-                    icon: const Icon(Icons.local_phone_rounded),
+              ],
+            ),
+          ),
+          const SizedBox(height: defaultPadding16/2),
+          TextFieldWidget(
+              label: "CPF",
+              hintText: '000.000.000-00',
+              type: const TextInputType.numberWithOptions(),
+              controller: controller.cpfController,
+              icon: const Icon(Icons.badge),
+              inputFormatter: [
+                maskFormatterCpf,
+                FilteringTextInputFormatter.deny(RegExp('[ ]')),
+              ],
+              validator: (String value) {
+                return controller.validatorDocId(value);
+              }),
+          Row(
+            children: [
+              Expanded(
+                flex: 4,
+                child: TextFieldWidget(
+                    label: "RG",
+                    hintText: '0.000.000 (-00)',
+                    type: const TextInputType.numberWithOptions(),
+                    controller: controller.rgController,
+                    icon: const Icon(Icons.badge),
                     inputFormatter: [
-                      controller.maskPhone.value
+                      maskFormatterRG,
+                      FilteringTextInputFormatter.deny(RegExp('[ ]')),
                     ],
-                    onChanged: controller.changeMaskPhone,
-                    validator: (String value) => null),
+                    validator: (String value) => value.length < 9
+                        ? 'Informe um RG válido' : null),
               ),
-              const SizedBox(height: defaultPadding16/2),
-              InkWell(
-                onTap: () => globalAlertDialog(
-                    title: 'Por que coletamos essas informações?',
-                    text: '• Para garantirmos que nossos usuários são pessoas reais\n'
-                        '• Para garantir a segurança do profissional e do cliente\n'
-                        '• Para garatirmos de que você realmente irá utilizar o app\n\n'
-                        'Para quem ficam disponíveis minhas informações?\n'
-                        'Apenas para você, elas são criptografadas assim que '
-                        'envia para o nosso banco de dados.\n\n'
-                        'Posso excluir meus dados?\n'
-                        'Sim, se você por algum motivo decidir não utilizar mais nossos '
-                        'serviços gratuitos, você pode excluir sua conta, o que irá remover '
-                        'todos seus dados de nosso banco de dados.',
-                    labelActionButton: 'entendi',
-                    onPressedAction: () => Get.back()),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Por que coletamos essas informações?',
-                          textAlign: TextAlign.justify,
-                          style: appStyle.bodySmall),
-                      const SizedBox(width: 4,),
-                      const Icon(Icons.help_outline_rounded, color: appNormalPrimaryColor,),
+              const SizedBox(width: 8,),
+              Expanded(
+                flex: 2,
+                child: TextFieldWidget(
+                    label: "SSP/**",
+                    hintText: 'SSP/**',
+                    type: TextInputType.text,
+                    controller: controller.rgEmitController,
+                    textCapitalization: TextCapitalization.characters,
+                    inputFormatter: [
+                      maskFormatterRGEmit,
+                      FilteringTextInputFormatter.deny(RegExp('[ ]')),
                     ],
-                  ),
-                ),
+                    validator: (String value) => value.length < 6
+                        ? 'Informe um SSP válido' : null),
               ),
             ],
-          )
+          ),
+          TextFieldWidget(
+              label: "Data de Nascimento",
+              hintText: '01/01/1990',
+              type: TextInputType.number,
+              controller: controller.birthdayController,
+              icon: const Icon(Icons.today_rounded),
+              inputFormatter: [
+                maskFormatterDate,
+              ],
+              validator: (String value) => value.length != 10
+                  ? 'Informe uma data válida' : compareDateFromNow(value)
+                  ? 'Você precisa ter mais de 18 anos' : null),
+          TextFieldWidget(
+              label: "Número Principal",
+              hintText: '(49) 9 1234-5678',
+              type: TextInputType.number,
+              controller: controller.phoneController,
+              icon: const Icon(Icons.local_phone_rounded),
+              inputFormatter: [
+                maskFormatterPhone,
+              ],
+              validator: (String value) => value.length != 16
+                  ? 'Informe um número válido' : null),
+          Obx(() => TextFieldWidget(
+                label: "Número Opcional",
+                hintText: '(49) 9 1234-5678',
+                type: TextInputType.number,
+                controller: controller.phone2Controller,
+                icon: const Icon(Icons.local_phone_rounded),
+                inputFormatter: [
+                  maskFormatterPhone,
+                ],
+                validator: (String value) => null),
+          ),
+          InkWell(
+            onTap: () => globalAlertDialog(
+                title: 'Por que coletamos essas informações?',
+                text: '• Para garantirmos que nossos usuários são pessoas reais\n'
+                    '• Para garantir a segurança do profissional e do cliente\n'
+                    '• Para garatirmos de que você realmente irá utilizar o app\n\n'
+                    'Para quem ficam disponíveis minhas informações?\n'
+                    'Apenas para você, elas são criptografadas assim que '
+                    'envia para o nosso banco de dados.\n\n'
+                    'Posso excluir meus dados?\n'
+                    'Sim, se você por algum motivo decidir não utilizar mais nossos '
+                    'serviços gratuitos, você pode excluir sua conta, o que irá remover '
+                    'todos seus dados de nosso banco de dados.',
+                labelActionButton: 'entendi',
+                onPressedAction: () => Get.back()),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Por que coletamos essas informações?',
+                      textAlign: TextAlign.justify,
+                      style: appStyle.bodySmall),
+                  const SizedBox(width: 4,),
+                  const Icon(Icons.help_outline_rounded, color: appNormalPrimaryColor,),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

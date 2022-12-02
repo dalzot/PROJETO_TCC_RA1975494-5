@@ -23,4 +23,6 @@ class ChatController extends GetxController with LoaderMixin {
   void onReady() {
     super.onReady();
   }
+
+
 }

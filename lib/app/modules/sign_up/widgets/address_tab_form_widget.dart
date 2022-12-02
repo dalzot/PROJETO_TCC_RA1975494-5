@@ -23,23 +23,20 @@ class AddressTabFormWidget extends StatelessWidget {
       key: formKey,
       onChanged: () => controller.validateAddressForm(formKey.currentState),
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      child: Padding(
-          padding: const EdgeInsets.symmetric(
-              horizontal: defaultPadding16 / 2, vertical: defaultPadding16),
-          child: Column(
-            children: [
-              const SizedBox(height: defaultPadding16),
-              Text('Muito bem, agora você precisa nos informar seu endereço',
-                  textAlign: TextAlign.justify,
-                  style: appStyle.titleMedium?.copyWith(fontWeight: FontWeight.w500)),
-              const SizedBox(height: defaultPadding16/2),
-              Text('Preencha seu endereço ou de seu escritório.\n\n'
-                  'Sua cidade e estado serão sempre públicos para que o '
-                  '${checkUserType(controller.profileType.value)
-                  ? 'cliente saiba qual região você atende.'
-                  : 'profissional saiba onde você está ou adicione um endereço novo na hora de solicitar um serviço.'}',
-                  textAlign: TextAlign.justify,
-                  style: appStyle.bodySmall),
+      child: Column(
+        children: [
+          const SizedBox(height: defaultPadding16),
+          Text('Muito bem, agora você precisa nos informar seu endereço',
+              textAlign: TextAlign.justify,
+              style: appStyle.titleMedium?.copyWith(fontWeight: FontWeight.w500)),
+          const SizedBox(height: defaultPadding16/2),
+          Text('Preencha seu endereço ou de seu escritório.\n\n'
+              'Sua cidade e estado serão sempre públicos para que o '
+              '${checkUserType(controller.profileType.value)
+              ? 'cliente saiba qual região você atende.'
+              : 'profissional saiba onde você está ou adicione um endereço novo na hora de solicitar um serviço.'}',
+              textAlign: TextAlign.justify,
+              style: appStyle.bodySmall),
 //              const SizedBox(height: defaultPadding),
 //              InkWell(
 //                onTap: () {
@@ -83,84 +80,83 @@ class AddressTabFormWidget extends StatelessWidget {
 //              Text('ou insira manualmente',
 //                  textAlign: TextAlign.justify,
 //                  style: appStyle.bodySmall),
-              const SizedBox(height: defaultPadding16 / 2),
-              Obx(() => TextFieldWidget(
-                  label: "CEP",
-                  hintText: '00000-000',
-                  type: TextInputType.number,
-                  controller: controller.cepController,
-                  suffixIcon: IconButton(
-                    icon: Icon(Icons.search_rounded,
-                        color: controller.cepError.value != ''
-                            ? appNormalGreyColor : appNormalPrimaryColor),
-                    onPressed: controller.cepError.value != ''
-                        ? null : () => controller.searchByCep(formKey.currentState),
-                  ),
-                  inputFormatter: [
-                    maskFormatterCep,
-                    FilteringTextInputFormatter.deny(RegExp('[ ]')),
-                  ],
-                  validator: controller.cepValidator),
+          const SizedBox(height: defaultPadding16 / 2),
+          Obx(() => TextFieldWidget(
+              label: "CEP",
+              hintText: '00000-000',
+              type: TextInputType.number,
+              controller: controller.cepController,
+              suffixIcon: IconButton(
+                icon: Icon(Icons.search_rounded,
+                    color: controller.cepError.value != ''
+                        ? appNormalGreyColor : appNormalPrimaryColor),
+                onPressed: controller.cepError.value != ''
+                    ? null : () => controller.searchByCep(formKey.currentState),
               ),
-              Row(
-                children: [
-                  Expanded(
-                    flex: 4,
-                    child: TextFieldWidget(
-                        label: "Cidade",
-                        type: TextInputType.text,
-                        controller: controller.cityController,
-                        validator: (String value) => value.isEmpty
-                            ? 'Informe uma cidade válida' : null),
-                  ),
-                  const SizedBox(width: 8,),
-                  Expanded(
-                    flex: 2,
-                    child: TextFieldWidget(
-                        label: "UF",
-                        type: TextInputType.text,
-                        controller: controller.provinceController,
-                        validator: (String value) => value.isEmpty
-                            ? 'UF inválido' : null),
-                  ),
-                ],
+              inputFormatter: [
+                maskFormatterCep,
+                FilteringTextInputFormatter.deny(RegExp('[ ]')),
+              ],
+              validator: controller.cepValidator),
+          ),
+          Row(
+            children: [
+              Expanded(
+                flex: 4,
+                child: TextFieldWidget(
+                    label: "Cidade",
+                    type: TextInputType.text,
+                    controller: controller.cityController,
+                    validator: (String value) => value.isEmpty
+                        ? 'Informe uma cidade válida' : null),
               ),
-              Row(
-                children: [
-                  Expanded(
-                    flex: 4,
-                    child: TextFieldWidget(
-                        label: "Rua",
-                        type: TextInputType.text,
-                        controller: controller.streetController,
-                        validator: (String value) => value.isEmpty
-                            ? 'Informe uma rua válida' : null),
-                  ),
-                  const SizedBox(width: 8,),
-                  Expanded(
-                    flex: 2,
-                    child: TextFieldWidget(
-                        label: "Número",
-                        type: TextInputType.text,
-                        controller: controller.numberController,
-                        validator: (String value) => value.isEmpty
-                            ? 'Inválido' : null),
-                  ),
-                ],
+              const SizedBox(width: 8,),
+              Expanded(
+                flex: 2,
+                child: TextFieldWidget(
+                    label: "UF",
+                    type: TextInputType.text,
+                    controller: controller.provinceController,
+                    validator: (String value) => value.isEmpty
+                        ? 'UF inválido' : null),
               ),
-              TextFieldWidget(
-                  label: "Bairro",
-                  type: TextInputType.text,
-                  controller: controller.districtController,
-                  validator: (String value) => value.isEmpty
-                      ? 'Informe um bairro válido' : null),
-              TextFieldWidget(
-                  label: "Complemento",
-                  type: TextInputType.text,
-                  controller: controller.complementController,
-                  validator: (String value) => null),
             ],
-          )
+          ),
+          Row(
+            children: [
+              Expanded(
+                flex: 4,
+                child: TextFieldWidget(
+                    label: "Rua",
+                    type: TextInputType.text,
+                    controller: controller.streetController,
+                    validator: (String value) => value.isEmpty
+                        ? 'Informe uma rua válida' : null),
+              ),
+              const SizedBox(width: 8,),
+              Expanded(
+                flex: 2,
+                child: TextFieldWidget(
+                    label: "Número",
+                    type: TextInputType.text,
+                    controller: controller.numberController,
+                    validator: (String value) => value.isEmpty
+                        ? 'Inválido' : null),
+              ),
+            ],
+          ),
+          TextFieldWidget(
+              label: "Bairro",
+              type: TextInputType.text,
+              controller: controller.districtController,
+              validator: (String value) => value.isEmpty
+                  ? 'Informe um bairro válido' : null),
+          TextFieldWidget(
+              label: "Complemento",
+              type: TextInputType.text,
+              controller: controller.complementController,
+              validator: (String value) => null),
+        ],
       ),
     );
   }

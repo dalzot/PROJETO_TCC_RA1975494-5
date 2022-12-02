@@ -37,7 +37,9 @@ class AnnounceDetailsPage extends GetView<AnnounceController> {
       showBottomMenu: false,
       backRoute: fromRoute,
       pageTitle: 'Solicitação de Serviço',
-      bottomBar: controller.checkMyProposal() || myServiceProposal != null ? null :
+      bottomBar: controller.checkMyProposal()
+          || !checkUserType(controller.userLogged.profileType)
+          || myServiceProposal != null ? null :
       Padding(
         padding: const EdgeInsets.all(16.0),
         child: ActionButtonWidget(

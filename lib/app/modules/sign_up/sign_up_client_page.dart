@@ -44,7 +44,7 @@ class SignUpClientPage extends GetView<SignUpController> {
         body: SafeArea(
           child: Container(
             alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(horizontal: 32),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Obx(() {
               if(controller.signUpStep.value < 3) {
                 return SingleChildScrollViewWidget(

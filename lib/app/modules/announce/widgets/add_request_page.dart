@@ -318,6 +318,9 @@ class AddRequestPage extends GetView<AnnounceController> {
                       if(picked != null && time != null) {
                         picked = DateTime(picked.year, picked.month, picked.day, time.hour, time.minute);
                         controller.setServiceDateMin(picked);
+                        if(controller.serviceDateMax.value.isBefore(picked)) {
+                          controller.setServiceDateMax(picked);
+                        }
                       }
                     },
                   )),

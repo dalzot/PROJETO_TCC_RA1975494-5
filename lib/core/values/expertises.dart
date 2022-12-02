@@ -1,18 +1,18 @@
 List<Map<String, dynamic>> allExpertises = [
-  {'title': 'Design & Tecnologia',
-    'value': [
-      'Animação (Motion)', 'Aplicativos para celulares', 'Autocad e Modelagem 3D', 'Automação Comercial',
-      'Convites', 'Corte e Gravação a Laser', 'Criação de Logos', 'Criação de Marca', 'Desenvolvimento de Games',
-      'Desenvolvimento de Site e Sistemas', 'Diagramador', 'Edição de Fotos', 'Ilustração', 'Marketing Online',
-      'Panfletos', 'Produção gráfica', 'Serviços de TI', 'Ux - Ui Design', 'Web design', 'Áudio e Vídeo', 'Outros'
-    ],
-  },
+//  {'title': 'Design & Tecnologia',
+//    'value': [
+//      'Animação (Motion)', 'Aplicativos para celulares', 'Autocad e Modelagem 3D', 'Automação Comercial',
+//      'Convites', 'Corte e Gravação a Laser', 'Criação de Logos', 'Criação de Marca', 'Desenvolvimento de Games',
+//      'Desenvolvimento de Site e Sistemas', 'Diagramador', 'Edição de Fotos', 'Ilustração', 'Marketing Online',
+//      'Panfletos', 'Produção gráfica', 'Serviços de TI', 'Ux - Ui Design', 'Web design', 'Áudio e Vídeo', 'Outros'
+//    ],
+//  },
   {'title': 'Assistência Técnica',
     'value': [
       'Ar condicionado', 'Cabeamento e Redes', 'Celular', 'Computador desktop', 'Câmeras', 'Eletrodomésticos',
       'Fogão e cooktop', 'Geladeira e freezer', 'Home theater', 'Impressora', 'Instrumentos musicais', 'Lava louças',
       'Lava roupas', 'Micro-ondas', 'Máquina de costura', 'Nootebook e Laptops', 'Relógios', 'Tablets', 'Telefone',
-      'Televisão', 'Técnico em Informática', 'Vídeo games', 'Outros'
+      'Televisão', 'Técnico em Informática', 'Serviços de TI', 'Vídeo games', 'Outros'
     ],
   },
   {'title': 'Serviços Automotivos',
@@ -24,9 +24,9 @@ List<Map<String, dynamic>> allExpertises = [
   },
   {'title': 'Serviços Domésticos',
     'value': [
-      'Adestrador de cães', 'Babá', 'Cozinheira', 'Diarista', 'Entregador', 'Governanta', 'Lavadeira', 'Lavagem de cortinas e tapetes',
-      'Limpeza de piscina', 'Motorista', 'Passadeira', 'Passeador de cães', 'Segurança particular', 'Segurança patrimonial',
-      'Serviços para pets', 'Outros'
+      'Adestrador de cães', 'Babá', 'Cozinheira', 'Diarista', 'Eletricista', 'Encanador', 'Entregador', 'Governanta',
+      'Lavadeira', 'Lavagem de cortinas e tapetes', 'Limpeza de piscina', 'Motorista', 'Passadeira', 'Passeador de cães',
+      'Segurança particular', 'Segurança patrimonial', 'Serviços para pets', 'Outros'
     ],
   },
   {'title': 'Serviços Gerais & Obras Residenciais',
@@ -50,14 +50,14 @@ List<Map<String, dynamic>> allExpertises = [
       'Micropigmentação', 'Podóloga', 'Sapateiro', 'Outros'
     ],
   },
-  {'title': 'Consultoria',
-    'value': [
-      'Administração de Condomínios', 'Administração de Imóveis', 'Advogado', 'Auditoria', 'Consultoria Especializada',
-      'Contador', 'Corretor', 'Despachante', 'Detetive Particular', 'Digitação e Digitalização', 'Economia e Finanças'
-      'Escrita e Conteúdo', 'Guia Turístico', 'Mediação de Conflitos', 'Palestrante', 'Pesquisas em geral',
-      'Recrutamento', 'Segurança do Trabalho', 'Testamento e Planejamento Patrimonial', 'Tradução', 'Treinamentos', 'Outros'
-    ],
-  },
+//  {'title': 'Consultoria',
+//    'value': [
+//      'Administração de Condomínios', 'Administração de Imóveis', 'Advogado', 'Auditoria', 'Consultoria Especializada',
+//      'Contador', 'Corretor', 'Despachante', 'Detetive Particular', 'Digitação e Digitalização', 'Economia e Finanças'
+//      'Escrita e Conteúdo', 'Guia Turístico', 'Mediação de Conflitos', 'Palestrante', 'Pesquisas em geral',
+//      'Recrutamento', 'Segurança do Trabalho', 'Testamento e Planejamento Patrimonial', 'Tradução', 'Treinamentos', 'Outros'
+//    ],
+//  },
   {'title': 'Eventos',
     'value': [
       'Animador de Festas', 'Acessor de Eventos', 'Bandas e Cantores', 'Bartender', 'Brindes e Lembrancinhas',

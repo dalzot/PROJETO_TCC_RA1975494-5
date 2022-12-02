@@ -29,7 +29,6 @@ class SignUpController extends GetxController with LoaderMixin {
   final rgEmitController = TextEditingController();
   final phoneController = TextEditingController();
   final phone2Controller = TextEditingController();
-  Rx<TextInputMask> maskPhone = TextInputMask(mask: '(99) 9999-99999').obs;
 
   // Social Links
   final whatsappController = TextEditingController();
@@ -111,11 +110,6 @@ class SignUpController extends GetxController with LoaderMixin {
     } else {
       isPersonalFormValidated.value = false;
     }
-  }
-
-  changeMaskPhone(value) {
-    maskPhone.value = getRawPhoneNumber(value).length < 10
-        ? TextInputMask(mask: '(99) 9999-99999') : TextInputMask(mask: '(99) 9 9999-9999');
   }
 
   void validateAddressForm(FormState? form) {
@@ -345,99 +339,6 @@ class SignUpController extends GetxController with LoaderMixin {
 
     loading.value = false;
     setNextSignUpStep();
-  }
-
-  void signInWithGoogle() async {
-    loading.value = true;
-
-    // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    if (googleUser == null) {
-      loading.value = false;
-      return;
-    }
-
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-
-//    if (googleAuth != null) {
-//      // Create a new credential
-//      final credential = GoogleAuthProvider.credential(
-//        accessToken: googleAuth.accessToken,
-//        idToken: googleAuth.idToken,
-//      );
-//
-//      // print("accessToken: ${googleAuth?.accessToken}");
-//      // print("idToken: ${googleAuth?.idToken}");
-//
-//      // Once signed in, return the UserCredential
-//      // final UserCredential response =
-//      //     await
-//      FirebaseAuth.instance
-//          .signInWithCredential(credential)
-//          .then((response) async {
-//        final accessToken = googleAuth.accessToken;
-//        dataSourceApi.loginGoogle(accessToken!).then((response) async {
-//          if (response.statusCode == 200) {
-//            _authService.typeRegistration = RegistrationType.social;
-//
-//            if(response.data['user']['phone'].contains("Google")) {
-//              _authService.user = UserModel(
-//                  docId: '',
-//                  email: response.data['user']['email'],
-//                  name: response.data['user']['name'],
-//                  phoneNumber: '',
-//                  id: null,
-//                  paymentCassolUser: false,
-//                  facebookId: '');
-//              callRouteByStatusId('4');
-//              return;
-//            }
-//            old_user_model.UserModel user =
-//            old_user_model.UserModel.fromRequestJson(response.data['user']);
-//
-//            _authService.user = getUserModelByOld(
-//                user, response.data["user"]["paymentCassolUser"] ?? false);
-//
-//            savePrefs(response.data, user);
-//
-//            final isOldRegister =
-//            await repository.checkStatus(_authService.user.id!);
-//
-//            dataSourceApi.updateUserFirebaseToken();
-//
-//            await Analytics.logLogin(loginMethod: 'sign_in_google');
-//            await Analytics.setUserId(userId: user.email);
-//
-//            callRouteByStatusId(
-//                isOldRegister ? "4" : response.data['user']['statusId']);
-//          } else if (response.statusCode == 401) {
-//            loading.value = false;
-//            if ("Invalid Credentials." == response.data["message"]) {
-//              snackBar("Login ou senha inválidos");
-//            } else if ("error.http.401" == response.data["message"]) {
-//              snackBar(
-//                  "Acesso não autorizado. \nContate o administrador do sistema!",
-//                  color: colorDanger);
-//            } else if (response.data["message"] ==
-//                "The user phone is not verified" &&
-//                response.data["phone"].toString().contains("Google")) {
-//              snackBar("Cadastro incompleto.");
-//              callRouteByStatusId("4");
-//            } else {
-//              callWelcomePage(response.data);
-//            }
-//          } else {
-//            snackBar(
-//                "Erro inesperado. Código 500 - ${response.data["message"]}");
-//          }
-//        });
-//      }).onError((error, stackTrace) {});
-//    } else {
-//      snackBar("Usuário não encontrado.");
-//    }
-    // Close loading dialog
-    loading.value = false;
   }
 
   deleteAccount() async {

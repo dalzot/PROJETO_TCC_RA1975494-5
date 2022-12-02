@@ -85,155 +85,147 @@ class SignUpProfessionalPage extends GetView<SignUpController> {
   }
 
   Widget ExpertisesFormWidget() {
-    return Padding(
-        padding: const EdgeInsets.symmetric(
-            horizontal: defaultPadding16 / 2, vertical: defaultPadding16),
-        child: Column(
-          children: [
-            const SizedBox(height: defaultPadding16),
-            Text('Escolha os serviços que você atenderá pelo aplicativo',
-                textAlign: TextAlign.justify,
-                style: appStyle.titleMedium?.copyWith(fontWeight: FontWeight.w500)),
-            const SizedBox(height: defaultPadding16/2),
-            RichText(
-              textAlign: TextAlign.justify,
-              text: TextSpan(
-                text: 'Vamos lá, estamos quase acabando, agora precisamos definir quais são as suas ',
-                style: appStyle.bodySmall,
-                children: <TextSpan>[
-                  TextSpan(text: 'habilidades & serviços prestados',
-                    style: appStyle.bodySmall?.copyWith(
-                        color: appNormalPrimaryColor, fontWeight: FontWeight.w500),
-                  ),
-                  TextSpan(text: '.\nVocê poderá adicionar ou remover alguma especialização no futuro, conforme suas qualificações.',
-                    style: appStyle.bodySmall,
-                  ),
-                ],
+    return Column(
+      children: [
+        const SizedBox(height: defaultPadding16),
+        Text('Escolha os serviços que você atenderá pelo aplicativo',
+            textAlign: TextAlign.justify,
+            style: appStyle.titleMedium?.copyWith(fontWeight: FontWeight.w500)),
+        const SizedBox(height: defaultPadding16/2),
+        RichText(
+          textAlign: TextAlign.justify,
+          text: TextSpan(
+            text: 'Vamos lá, estamos quase acabando, agora precisamos definir quais são as suas ',
+            style: appStyle.bodySmall,
+            children: <TextSpan>[
+              TextSpan(text: 'habilidades & serviços prestados',
+                style: appStyle.bodySmall?.copyWith(
+                    color: appNormalPrimaryColor, fontWeight: FontWeight.w500),
               ),
-            ),
-            const SizedBox(height: defaultPadding16),
-            const Divider(thickness: 2, height: defaultPadding16,),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Selecione os serviços prestados:', style: appStyle.bodySmall,),
-                GlobalListViewBuilderWidget(
-                    itemCount: allExpertises.length,
-                    itemBuilder: (_, index) {
-                      var expertise = allExpertises[index];
-                      var subExpertises = expertise['value'];
-                      return CustomCheckboxWidget(
-                        onCheck: (checked) => controller.addProfessionalExpertises(expertise: checked),
-                        onUncheck: (unchecked) => controller.removeProfessionalExpertises(expertise: unchecked),
-                        parent: Text(expertise['title']),
-                        checkList: controller.profileExpertises,
-                        children: subExpertises.map((e) =>
-                            Text(e.toString())).toList());
-                    }),
-              ],
-            ),
-            const Divider(thickness: 2, height: defaultPadding16,),
-            const SizedBox(height: defaultPadding16),
-            Text('Lembre-se de escolher apenas os serviços os quais você consegue realizar, '
-                'sua reputação no app dependerá da qualidade do serviço prestado e das avaliações de seus clientes.',
-              textAlign: TextAlign.justify,
-              style: appStyle.bodySmall),
-            const SizedBox(height: defaultPadding16),
-
+              TextSpan(text: '.\nVocê poderá adicionar ou remover alguma especialização no futuro, conforme suas qualificações.',
+                style: appStyle.bodySmall,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: defaultPadding16),
+        const Divider(thickness: 2, height: defaultPadding16,),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Selecione os serviços prestados:', style: appStyle.bodySmall,),
+            GlobalListViewBuilderWidget(
+                itemCount: allExpertises.length,
+                itemBuilder: (_, index) {
+                  var expertise = allExpertises[index];
+                  var subExpertises = expertise['value'];
+                  return CustomCheckboxWidget(
+                    onCheck: (checked) => controller.addProfessionalExpertises(expertise: checked),
+                    onUncheck: (unchecked) => controller.removeProfessionalExpertises(expertise: unchecked),
+                    parent: Text(expertise['title']),
+                    checkList: controller.profileExpertises,
+                    children: subExpertises.map((e) =>
+                        Text(e.toString())).toList());
+                }),
           ],
-        )
+        ),
+        const Divider(thickness: 2, height: defaultPadding16,),
+        const SizedBox(height: defaultPadding16),
+        Text('Lembre-se de escolher apenas os serviços os quais você consegue realizar, '
+            'sua reputação no app dependerá da qualidade do serviço prestado e das avaliações de seus clientes.',
+          textAlign: TextAlign.justify,
+          style: appStyle.bodySmall),
+        const SizedBox(height: defaultPadding16),
+
+      ],
     );
   }
 
   Widget BioPaymentFormWidget() {
-    return Padding(
-        padding: const EdgeInsets.symmetric(
-            horizontal: defaultPadding16 / 2, vertical: defaultPadding16),
-        child: Column(
+    return Column(
+      children: [
+        const SizedBox(height: defaultPadding16),
+        Text('Muito bem, estamos quase na etapa final!',
+            textAlign: TextAlign.justify,
+            style: appStyle.titleMedium?.copyWith(fontWeight: FontWeight.w500)),
+        const SizedBox(height: defaultPadding16/2),
+        Text('Agora nos conte um pouco mais sobre sua biografia e os '
+            'mais detalhes do seu trabalho se assim preferir.',
+            textAlign: TextAlign.justify,
+            style: appStyle.bodySmall),
+        const SizedBox(height: defaultPadding16/2),
+        TextFieldWidget(
+            label: "Detalhes, horários e informações",
+            type: TextInputType.text,
+            minLines: 3,
+            maxLines: 3,
+            maxLength: 500,
+            controller: controller.biographyController,
+            validator: (String value) => null),
+        Text('Precisamos definir também, quais serão as formas de pagamento que você aceita, '
+            'você poderá atualizar essas informações no futuro também.',
+            textAlign: TextAlign.justify,
+            style: appStyle.bodySmall),
+        const SizedBox(height: defaultPadding16),
+        const Divider(thickness: 2, height: defaultPadding16,),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: defaultPadding16),
-            Text('Muito bem, estamos quase na etapa final!',
-                textAlign: TextAlign.justify,
-                style: appStyle.titleMedium?.copyWith(fontWeight: FontWeight.w500)),
-            const SizedBox(height: defaultPadding16/2),
-            Text('Agora nos conte um pouco mais sobre sua biografia e os '
-                'mais detalhes do seu trabalho se assim preferir.',
-                textAlign: TextAlign.justify,
-                style: appStyle.bodySmall),
-            const SizedBox(height: defaultPadding16/2),
-            TextFieldWidget(
-                label: "Detalhes, horários e informações",
-                type: TextInputType.text,
-                minLines: 3,
-                maxLines: 3,
-                maxLength: 500,
-                controller: controller.biographyController,
-                validator: (String value) => null),
-            Text('Precisamos definir também, quais serão as formas de pagamento que você aceita, '
-                'você poderá atualizar essas informações no futuro também.',
-                textAlign: TextAlign.justify,
-                style: appStyle.bodySmall),
-            const SizedBox(height: defaultPadding16),
-            const Divider(thickness: 2, height: defaultPadding16,),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Selecione as formas de pagamento que você aceita:', style: appStyle.bodySmall,),
-                GlobalListViewBuilderWidget(
-                    itemCount: 1,
-                    itemBuilder: (_, index) {
-                      return CustomCheckbox(
-                          onCheck: (checked) => controller.addPaymentsMethods(
-                              payment: checked, form: _formKey.currentState),
-                          onUncheck: (unchecked) => controller.removePaymentsMethods(
-                              payment: unchecked, form: _formKey.currentState),
-                          checkList: controller.paymentMethods,
-                          children: allPaymentMethods.map((e) =>
-                              Text(e.toString())).toList());
-                    }),
-              ],
-            ),
-            const Divider(thickness: 2, height: defaultPadding16,),
-            TextFieldWidget(
-                label: "Outros métodos de pagamento",
-                type: TextInputType.text,
-                minLines: 2,
-                maxLines: 2,
-                controller: controller.otherPaymentsController,
-                validator: (String value) => null),
-            Text('Não se preocupe, o app não realizará nenhuma cobrança e '
-                'não aceitará nenhum pagamento como intermediário, as formas '
-                'de pagamento escolhidas, serão mostradas aos clientes para que '
-                'saibam quais as maneiras você aceitará como pagamento.',
-              textAlign: TextAlign.justify,
-              style: appStyle.bodySmall),
-            const SizedBox(height: defaultPadding16/2),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text('IMPORTANTE',
-                textAlign: TextAlign.start,
-                style: appStyle.titleMedium?.copyWith(fontWeight: FontWeight.w500)),
-            ),
-            RichText(
-              textAlign: TextAlign.justify,
-              text: TextSpan(
-                text: 'O aplicativo é ',
-                style: appStyle.bodySmall,
-                children: <TextSpan>[
-                  TextSpan(text: '100% GRATUITO',
-                    style: appStyle.bodySmall?.copyWith(
-                        color: appNormalPrimaryColor, fontWeight: FontWeight.w500),
-                  ),
-                  TextSpan(text: ', você é livre para criar anúncios e '
-                      'aceitar chamados de serviços, não cobramos comissão nem taxas de anúncio',
-                    style: appStyle.bodySmall,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: defaultPadding16),
+            Text('Selecione as formas de pagamento que você aceita:', style: appStyle.bodySmall,),
+            GlobalListViewBuilderWidget(
+                itemCount: 1,
+                itemBuilder: (_, index) {
+                  return CustomCheckbox(
+                      onCheck: (checked) => controller.addPaymentsMethods(
+                          payment: checked, form: _formKey.currentState),
+                      onUncheck: (unchecked) => controller.removePaymentsMethods(
+                          payment: unchecked, form: _formKey.currentState),
+                      checkList: controller.paymentMethods,
+                      children: allPaymentMethods.map((e) =>
+                          Text(e.toString())).toList());
+                }),
           ],
-        )
+        ),
+        const Divider(thickness: 2, height: defaultPadding16,),
+        TextFieldWidget(
+            label: "Outros métodos de pagamento",
+            type: TextInputType.text,
+            minLines: 2,
+            maxLines: 2,
+            controller: controller.otherPaymentsController,
+            validator: (String value) => null),
+        Text('Não se preocupe, o app não realizará nenhuma cobrança e '
+            'não aceitará nenhum pagamento como intermediário, as formas '
+            'de pagamento escolhidas, serão mostradas aos clientes para que '
+            'saibam quais as maneiras você aceitará como pagamento.',
+          textAlign: TextAlign.justify,
+          style: appStyle.bodySmall),
+        const SizedBox(height: defaultPadding16/2),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text('IMPORTANTE',
+            textAlign: TextAlign.start,
+            style: appStyle.titleMedium?.copyWith(fontWeight: FontWeight.w500)),
+        ),
+        RichText(
+          textAlign: TextAlign.justify,
+          text: TextSpan(
+            text: 'O aplicativo é ',
+            style: appStyle.bodySmall,
+            children: <TextSpan>[
+              TextSpan(text: '100% GRATUITO',
+                style: appStyle.bodySmall?.copyWith(
+                    color: appNormalPrimaryColor, fontWeight: FontWeight.w500),
+              ),
+              TextSpan(text: ', você é livre para criar anúncios e '
+                  'aceitar chamados de serviços, não cobramos comissão nem taxas de anúncio',
+                style: appStyle.bodySmall,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: defaultPadding16),
+      ],
     );
   }
 }

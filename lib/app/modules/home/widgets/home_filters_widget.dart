@@ -21,8 +21,8 @@ class HomeFiltersWidget extends GetView<HomeController> {
     return GlobalListViewWidget(
       children: [
         Visibility(
-          visible: checkUserType(controller.userLogged.profileType),
-          child: TypeFilter()),
+            visible: controller.userLogged.profileType == 'profissional',
+            child: TypeFilter()),
         StatusFilter(),
         const Divider(height: 1, thickness: 1, color: appLightGreyColor),
         const SizedBox(height: 8),

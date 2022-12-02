@@ -121,7 +121,7 @@ class PersonalDetailsWidget extends GetView<ProfileController> {
                                 radius: 60,
                                 backgroundColor: Colors.transparent,
                                 backgroundImage: controller.profileImage.isEmpty ? null
-                                    : Image.memory(Uint8List.fromList(controller.profileImage)).image,
+                                    : Image.memory(Uint8List.fromList(controller.profileImage), fit: BoxFit.cover,).image,
                                 child: Visibility(
                                     visible: controller.profileImage.isEmpty,
                                     child: Icon(profileView != null
@@ -178,7 +178,9 @@ class PersonalDetailsWidget extends GetView<ProfileController> {
             children: [
               Expanded(child: LongButton('Conversar', ContactButtonType.chat, context)),
               const SizedBox(width: defaultPadding16),
-              Expanded(child: LongButton('Ligar', ContactButtonType.call, context)),
+              Expanded(child: LongButton('Ligar', ContactButtonType.call, context,
+                  phoneNumber: controller.profileModel.phoneNumber,
+                  phoneNumber2: controller.profileModel.phoneNumber2)),
               const SizedBox(width: defaultPadding16),
               Expanded(child: LongButton('Compartilhar', ContactButtonType.share, context)),
             ],
