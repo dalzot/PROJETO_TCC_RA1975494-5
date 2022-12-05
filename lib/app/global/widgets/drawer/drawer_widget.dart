@@ -64,7 +64,7 @@ class DrawerWidget extends StatelessWidget {
                     Get.offNamed(Routes.home);
                   },
                 ),
-                if(checkUserType(authService.profileModel.profileType)) // SE FOR PROFISSIONAL MOSTRA O BOTÃO DE SERVIÇOS
+                if(checkUserType(authService.userLogged.profileType)) // SE FOR PROFISSIONAL MOSTRA O BOTÃO DE SERVIÇOS
                   DrawerListTileWidget(
                     text: 'Serviços',
                     icon: Icons.home_repair_service_rounded,
@@ -74,7 +74,7 @@ class DrawerWidget extends StatelessWidget {
                       Get.offNamed(Routes.myServices);
                     },
                   ),
-                if(!checkUserType(authService.profileModel.profileType)) // SE FOR PROFISSIONAL MOSTRA O BOTÃO DE SERVIÇOS
+                if(!checkUserType(authService.userLogged.profileType)) // SE FOR PROFISSIONAL MOSTRA O BOTÃO DE SERVIÇOS
                   DrawerListTileWidget(
                     text: 'Meus Pedidos',
                     icon: Icons.receipt_long_rounded,
@@ -111,34 +111,34 @@ class DrawerWidget extends StatelessWidget {
                     Get.toNamed(Routes.saveds);
                   },
                 ),
-                DrawerListTileWidget(
-                  text: 'Generate Test',
-                  icon: Icons.generating_tokens_rounded,
-                  currentRoute: Routes.saveds,
-                  onTap: () {
-                    Get.back();
-                    openModalBottomSheet(context,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            componentButtonPicker(
-                                label: 'Clientes',
-                                iconType: Icons.person_search_rounded,
-                                onTap: () {
-                                  generateRandom(2);
-                                }),
-                            componentButtonPicker(
-                                label: 'Profissionais',
-                                iconType: Icons.build_rounded,
-                                onTap: () {
-                                  generateRandom(1);
-                                }),
-                          ],
-                        ),
-                        title: "Gerar perfis de teste",
-                        textButton: "CANCELAR");
-                  },
-                ),
+//                DrawerListTileWidget(
+//                  text: 'Generate Test',
+//                  icon: Icons.generating_tokens_rounded,
+//                  currentRoute: Routes.saveds,
+//                  onTap: () {
+//                    Get.back();
+//                    openModalBottomSheet(context,
+//                        child: Row(
+//                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+//                          children: [
+//                            componentButtonPicker(
+//                                label: 'Clientes',
+//                                iconType: Icons.person_search_rounded,
+//                                onTap: () {
+//                                  generateRandom(2);
+//                                }),
+//                            componentButtonPicker(
+//                                label: 'Profissionais',
+//                                iconType: Icons.build_rounded,
+//                                onTap: () {
+//                                  generateRandom(1);
+//                                }),
+//                          ],
+//                        ),
+//                        title: "Gerar perfis de teste",
+//                        textButton: "CANCELAR");
+//                  },
+//                ),
 //                DrawerListTileWidget(
 //                  text: 'Conteúdos Profissionalizantes',
 //                  icon: Icons.local_library_rounded,

@@ -15,7 +15,7 @@ class HomeBannerProfessionalWidget extends GetView<HomeController> {
     return Container(
       alignment: Alignment.center,
       child: CarouselSlider(
-          items: controller.filteredProfessionalsAds.map((detach) {
+          items: [].map((detach) {
             return Builder(
               builder: (BuildContext context) {
                 return ProfessionalCardWidget(profile: detach);

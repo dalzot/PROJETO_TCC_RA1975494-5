@@ -19,7 +19,7 @@ class ProfilesSavedCardWidget extends StatelessWidget {
 
   goToProfileDetails() async {
     ProfileModel profileLoaded = await FirebaseService.getProfileModelData(profile.firebaseId);
-    Get.lazyPut(() => ProfileController(profileParam: profileLoaded)); // Criar um controller temporário
+    Get.lazyPut(() => ProfileController()); // Criar um controller temporário
     Get.to(() => ProfilePage(profileView: profileLoaded, backRoute: Routes.saveds));
   }
 

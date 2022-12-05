@@ -18,8 +18,8 @@ import '../../../../core/values/enums.dart';
 import '../../../../routes/app_pages.dart';
 
 class ProfileController extends GetxController with LoaderMixin {
-  ProfileModel? profileParam;
-  ProfileController({this.profileParam});
+//  ProfileModel? profileParam;
+//  ProfileController({this.profileParam});
 
   AuthServices authServices = Get.find<AuthServices>();
   RxBool loading = false.obs;
@@ -53,12 +53,12 @@ class ProfileController extends GetxController with LoaderMixin {
   }
 
   loadProfilePage() {
-    if(profileParam != null) {
-      profileModel = profileParam!;
-    } else {
-      profileModel = authServices.profileModel;
-    }
-    profilesSaved.value = authServices.profileModel.profilesSaved;
+//    if(profileParam != null) {
+//      profileModel = profileParam!;
+//    } else {
+      profileModel = authServices.userLogged;
+//    }
+    profilesSaved.value = authServices.userLogged.profilesSaved;
     profileImage.value = profileModel.image;
     bannerImage.value = profileModel.banner;
     currentStatus.value = profileModel.status;
@@ -95,17 +95,17 @@ class ProfileController extends GetxController with LoaderMixin {
   }
 
   Future addProfileToSaved(ProfileModel profile) async {
-    print('profile: ${authServices.profileModel}');
-    authServices.profileModel.profilesSaved.add(ProfileSavedModel.fromProfile(profile));
+    print('profile: ${authServices.userLogged}');
+    authServices.userLogged.profilesSaved.add(ProfileSavedModel.fromProfile(profile));
     await firebase.collection(collectionProfiles)
-        .doc(authServices.profileModel.firebaseId).update(authServices.profileModel.toUpdateSaveds());
+        .doc(authServices.userLogged.firebaseId).update(authServices.userLogged.toUpdateSaveds());
     viewProfileSaved.value = true;
   }
 
   Future removeProfileToSaved(String firebaseId) async {
-    authServices.profileModel.profilesSaved.removeWhere((p) => p.firebaseId == firebaseId);
+    authServices.userLogged.profilesSaved.removeWhere((p) => p.firebaseId == firebaseId);
     await firebase.collection(collectionProfiles)
-        .doc(authServices.profileModel.firebaseId).update(authServices.profileModel.toUpdateSaveds());
+        .doc(authServices.userLogged.firebaseId).update(authServices.userLogged.toUpdateSaveds());
     viewProfileSaved.value = false;
   }
 

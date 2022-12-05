@@ -1,4 +1,3 @@
-import 'package:delivery_servicos/app/modules/home/controller/home_controller.dart';
 import 'package:delivery_servicos/core/util/global_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,18 +11,66 @@ import '../../../global/constants/styles_const.dart';
 import '../../../global/widgets/checkbox/custom_checkbox_widget.dart';
 import '../../../global/widgets/lists/global_list_view_widget.dart';
 import '../../../global/widgets/textfields/text_field_widget.dart';
+import '../controller/home_controller.dart';
 
 class HomeFiltersWidget extends GetView<HomeController> {
+  final setTypeFilter;
+  final setStatusFilter;
+  final typeFilter;
+  final statusFilter;
+  final searchByCepController;
+  final cepError;
+  final searchByCep;
+  final cepValidator;
+  final searchCityController;
+  final searchProvinceController;
+  final searchStreetController;
+  final searchDistrictController;
+  final addProfessionalExpertises;
+  final removeProfessionalExpertises;
+  final expertisesFilter;
+  final addPaymentsMethods;
+  final removePaymentsMethods;
+  final paymentsFilter;
+  HomeFiltersWidget({
+    this.setTypeFilter,
+    this.typeFilter,
+    this.statusFilter,
+    this.setStatusFilter,
+    required this.searchByCepController,
+    required this.cepError,
+    required this.searchByCep,
+    required this.cepValidator,
+    required this.searchCityController,
+    required this.searchProvinceController,
+    required this.searchStreetController,
+    required this.searchDistrictController,
+    required this.addProfessionalExpertises,
+    required this.removeProfessionalExpertises,
+    required this.expertisesFilter,
+    required this.addPaymentsMethods,
+    required this.removePaymentsMethods,
+    required this.paymentsFilter,
+    Key? key}) : super(key: key);
+  
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    print('${checkUserType(controller.userLogged.profileType)}'
+        '&& ${setTypeFilter != null && typeFilter != null} \n'
+        '${controller.userLogged.profileType}'
+        '&& setTypeFilter != null && typeFilter != null');
     return GlobalListViewWidget(
       children: [
         Visibility(
-            visible: controller.userLogged.profileType == 'profissional',
+            visible: checkUserType(controller.userLogged.profileType)
+                && setTypeFilter != null && typeFilter != null,
             child: TypeFilter()),
-        StatusFilter(),
+        Visibility(
+            visible: !checkUserType(controller.userLogged.profileType)
+                && setStatusFilter != null && statusFilter != null,
+            child: StatusFilter()),
         const Divider(height: 1, thickness: 1, color: appLightGreyColor),
         const SizedBox(height: 8),
         AddressFilter(),
@@ -36,29 +83,27 @@ class HomeFiltersWidget extends GetView<HomeController> {
   }
 
   Widget TypeFilter() {
-    return Obx(() => Row(
+    return Row(
       children: [
         Checkbox(
-          onChanged: controller.statusFilter.value
-              ? null : (b) => controller.setTypeFilter(b!),
-          value: controller.typeFilter.value,
+          onChanged: (b) => setTypeFilter(b!),
+          value: typeFilter ?? false,
         ),
         Text('Buscar por ofertas de serviço'),
       ],
-    ));
+    );
   }
 
   Widget StatusFilter() {
-    return Obx(() => Row(
+    return Row(
       children: [
         Checkbox(
-          onChanged: controller.typeFilter.value
-              ? null : (b) => controller.setStatusFilter(b!),
-          value: controller.statusFilter.value,
+          onChanged: (b) => setStatusFilter(b!),
+          value: statusFilter ?? false,
         ),
         Text('Somente profissionais online'),
       ],
-    ));
+    );
   }
 
   Widget AddressFilter() {
@@ -68,23 +113,22 @@ class HomeFiltersWidget extends GetView<HomeController> {
           alignment: Alignment.centerLeft,
           child: Text('Filtrar por endereço', style: appStyle.bodySmall)),
         const SizedBox(height: 8),
-        Obx(() => TextFieldWidget(
+        TextFieldWidget(
             label: "CEP",
             hintText: '00000-000',
             type: TextInputType.number,
-            controller: controller.searchByCepController,
+            controller: searchByCepController,
             suffixIcon: IconButton(
               icon: Icon(Icons.search_rounded,
-                  color: controller.cepError.value != ''
-                      ? appNormalGreyColor : appNormalPrimaryColor),
-              onPressed: controller.cepError.value != ''
-                  ? null : () => controller.searchByCep(_formKey.currentState),
+                  color: cepError != '' ? appNormalGreyColor : appNormalPrimaryColor),
+              onPressed: cepError != ''
+                  ? null : () => searchByCep(_formKey.currentState),
             ),
             inputFormatter: [
               maskFormatterCep,
               FilteringTextInputFormatter.deny(RegExp('[ ]')),
             ],
-            validator: controller.cepValidator)),
+            validator: cepValidator),
         Row(
           children: [
             Expanded(
@@ -92,7 +136,7 @@ class HomeFiltersWidget extends GetView<HomeController> {
               child: TextFieldWidget(
                   label: "Cidade",
                   type: TextInputType.text,
-                  controller: controller.searchCityController,
+                  controller: searchCityController,
                   validator: (String value) => null),
             ),
             const SizedBox(width: 8,),
@@ -101,21 +145,21 @@ class HomeFiltersWidget extends GetView<HomeController> {
               child: TextFieldWidget(
                   label: "UF",
                   type: TextInputType.text,
-                  controller: controller.searchProvinceController,
+                  controller: searchProvinceController,
                   validator: (String value) => null),
             ),
           ],
         ),
         Visibility(
-          visible: controller.searchStreetController.text.isNotEmpty
-              && controller.searchDistrictController.text.isNotEmpty,
+          visible: searchStreetController.text.isNotEmpty
+              && searchDistrictController.text.isNotEmpty,
           child: Column(
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Endereço: '),
-                  Text('${controller.searchStreetController.text}',
+                  Text('${searchStreetController.text}',
                     style: appStyle.bodyMedium?.copyWith(fontWeight: FontWeight.w500),),
                 ],
               ),
@@ -123,7 +167,7 @@ class HomeFiltersWidget extends GetView<HomeController> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Bairro: '),
-                  Text('${controller.searchDistrictController.text}',
+                  Text('${searchDistrictController.text}',
                     style: appStyle.bodyMedium?.copyWith(fontWeight: FontWeight.w500)),
                 ],
               ),
@@ -147,10 +191,10 @@ class HomeFiltersWidget extends GetView<HomeController> {
                 var expertise = allExpertises[index];
                 var subExpertises = expertise['value'];
                 return CustomCheckboxWidget(
-                    onCheck: (checked) => controller.addProfessionalExpertises(expertise: checked),
-                    onUncheck: (unchecked) => controller.removeProfessionalExpertises(expertise: unchecked),
+                    onCheck: (checked) => addProfessionalExpertises(expertise: checked),
+                    onUncheck: (unchecked) => removeProfessionalExpertises(expertise: unchecked),
                     parent: Text(expertise['title']),
-                    checkList: controller.expertisesFilter,
+                    checkList: expertisesFilter,
                     children: subExpertises.map((e) =>
                         Text(e.toString())).toList());
               }),
@@ -170,9 +214,9 @@ class HomeFiltersWidget extends GetView<HomeController> {
               itemCount: 1,
               itemBuilder: (_, index) {
                 return CustomCheckbox(
-                    onCheck: (checked) => controller.addPaymentsMethods(payment: checked),
-                    onUncheck: (unchecked) => controller.removePaymentsMethods(payment: unchecked),
-                    checkList: controller.paymentsFilter,
+                    onCheck: (checked) => addPaymentsMethods(payment: checked),
+                    onUncheck: (unchecked) => removePaymentsMethods(payment: unchecked),
+                    checkList: paymentsFilter,
                     children: allPaymentMethods.map((e) =>
                         Text(e.toString())).toList());
               }),

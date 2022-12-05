@@ -16,7 +16,7 @@ class ProfessionalCardWidget extends StatelessWidget {
   const ProfessionalCardWidget({required this.profile, Key? key}) : super(key: key);
 
   goToProfileDetails() {
-    Get.lazyPut(() => ProfileController(profileParam: profile)); // Criar um controller temporário
+    Get.lazyPut(() => ProfileController()); // Criar um controller temporário
     Get.to(() => ProfilePage(profileView: profile));
   }
 

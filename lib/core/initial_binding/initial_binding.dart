@@ -20,6 +20,8 @@ class InitialBinding implements Bindings {
 
     Get.put<SignUpController>(SignUpController(), permanent: true);
 
+    Get.lazyPut<HomeController>(() => HomeController());
+
     Get.putAsync<AuthServices>(() => AuthServices().init(), permanent: true);
   }
 }

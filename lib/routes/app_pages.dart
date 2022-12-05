@@ -44,11 +44,11 @@ class AppPages {
       page: () => const ChatPage(),
       binding: ChatBinding(),
     ),
-    GetPage(
-      name: Routes.chatDetails,
-      page: () => const ChatDetailsPage(),
-      binding: ChatBinding(),
-    ),
+//    GetPage(
+//      name: Routes.chatDetails,
+//      page: () => const ChatDetailsPage(),
+//      binding: ChatBinding(),
+//    ),
 
     /// Requests Pages
     GetPage(

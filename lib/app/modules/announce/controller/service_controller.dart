@@ -25,9 +25,9 @@ class ServiceController extends GetxController with LoaderMixin {
 
   @override
   void onInit() {
-    print('onInit - Get.put(()=>AnnounceController');
+    print('onInit - Get.put(()=>ServiceController');
 
-    userLogged = authServices.profileModel;
+    userLogged = authServices.userLogged;
 
     print('Get.currentRoute: ${Get.currentRoute}');
     super.onInit();
@@ -36,7 +36,7 @@ class ServiceController extends GetxController with LoaderMixin {
   @override
   void onReady() {
     loadingMyServices.value = true;
-    userLogged = authServices.profileModel;
+    userLogged = authServices.userLogged;
 
     loadMyServices();
 
@@ -87,7 +87,7 @@ class ServiceController extends GetxController with LoaderMixin {
     await FirebaseService.updateServiceData(serviceModel.serviceId, serviceModel.toProposal())
         .then((value) async {
       userLogged.serviceProposals.removeWhere((s) => s == serviceModel.serviceId!);
-      authServices.profileModel = userLogged;
+      authServices.userLogged = userLogged;
 
       await FirebaseService.updateProfileData(userLogged.firebaseId, userLogged.toProposals());
       resetMyProposal();

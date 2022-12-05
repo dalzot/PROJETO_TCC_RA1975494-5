@@ -1,12 +1,12 @@
 List<Map<String, dynamic>> allExpertises = [
-//  {'title': 'Design & Tecnologia',
-//    'value': [
-//      'Animação (Motion)', 'Aplicativos para celulares', 'Autocad e Modelagem 3D', 'Automação Comercial',
-//      'Convites', 'Corte e Gravação a Laser', 'Criação de Logos', 'Criação de Marca', 'Desenvolvimento de Games',
-//      'Desenvolvimento de Site e Sistemas', 'Diagramador', 'Edição de Fotos', 'Ilustração', 'Marketing Online',
-//      'Panfletos', 'Produção gráfica', 'Serviços de TI', 'Ux - Ui Design', 'Web design', 'Áudio e Vídeo', 'Outros'
-//    ],
-//  },
+  {'title': 'Design & Tecnologia',
+    'value': [
+      'Animação (Motion)', 'Aplicativos para celulares', 'Autocad e Modelagem 3D', 'Automação Comercial',
+      'Convites', 'Corte e Gravação a Laser', 'Criação de Logos', 'Criação de Marca', 'Desenvolvimento de Games',
+      'Desenvolvimento de Site e Sistemas', 'Diagramador', 'Edição de Fotos', 'Ilustração', 'Marketing Online',
+      'Panfletos', 'Produção gráfica', 'Serviços de TI', 'Ux - Ui Design', 'Web design', 'Áudio e Vídeo', 'Outros'
+    ],
+  },
   {'title': 'Assistência Técnica',
     'value': [
       'Ar condicionado', 'Cabeamento e Redes', 'Celular', 'Computador desktop', 'Câmeras', 'Eletrodomésticos',
@@ -50,14 +50,14 @@ List<Map<String, dynamic>> allExpertises = [
       'Micropigmentação', 'Podóloga', 'Sapateiro', 'Outros'
     ],
   },
-//  {'title': 'Consultoria',
-//    'value': [
-//      'Administração de Condomínios', 'Administração de Imóveis', 'Advogado', 'Auditoria', 'Consultoria Especializada',
-//      'Contador', 'Corretor', 'Despachante', 'Detetive Particular', 'Digitação e Digitalização', 'Economia e Finanças'
-//      'Escrita e Conteúdo', 'Guia Turístico', 'Mediação de Conflitos', 'Palestrante', 'Pesquisas em geral',
-//      'Recrutamento', 'Segurança do Trabalho', 'Testamento e Planejamento Patrimonial', 'Tradução', 'Treinamentos', 'Outros'
-//    ],
-//  },
+  {'title': 'Consultoria',
+    'value': [
+      'Administração de Condomínios', 'Administração de Imóveis', 'Advogado', 'Auditoria', 'Consultoria Especializada',
+      'Contador', 'Corretor', 'Despachante', 'Detetive Particular', 'Digitação e Digitalização', 'Economia e Finanças'
+      'Escrita e Conteúdo', 'Guia Turístico', 'Mediação de Conflitos', 'Palestrante', 'Pesquisas em geral',
+      'Recrutamento', 'Segurança do Trabalho', 'Testamento e Planejamento Patrimonial', 'Tradução', 'Treinamentos', 'Outros'
+    ],
+  },
   {'title': 'Eventos',
     'value': [
       'Animador de Festas', 'Acessor de Eventos', 'Bandas e Cantores', 'Bartender', 'Brindes e Lembrancinhas',

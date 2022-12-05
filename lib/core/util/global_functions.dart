@@ -4,6 +4,11 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_time_format/date_time_format.dart';
 import 'package:delivery_servicos/app/global/widgets/lists/global_list_view_widget.dart';
+import 'package:delivery_servicos/app/modules/announce/controller/service_controller.dart';
+import 'package:delivery_servicos/app/modules/edit_profile/controller/edit_controller.dart';
+import 'package:delivery_servicos/app/modules/home/controller/home_client_controller.dart';
+import 'package:delivery_servicos/app/modules/home/controller/home_controller.dart';
+import 'package:delivery_servicos/app/modules/home/controller/home_professional_controller.dart';
 import 'package:delivery_servicos/app/modules/sign_in/controller/sign_in_controller.dart';
 import 'package:delivery_servicos/core/values/expertises.dart';
 import 'package:delivery_servicos/core/values/payment_methods.dart';
@@ -16,7 +21,11 @@ import 'package:rx_shared_preferences/rx_shared_preferences.dart';
 import 'package:search_cep/search_cep.dart';
 
 import '../../app/global/constants/constants.dart';
+import '../../app/modules/chat/chat_details.dart';
+import '../../app/modules/chat/controller/chat_controller.dart';
+import '../../app/modules/profile/controller/profile_controller.dart';
 import '../../app/modules/profile/models/profile_model.dart';
+import '../services/firebase_service.dart';
 import '../theme/app_color.dart';
 import '../theme/app_style.dart';
 
@@ -243,7 +252,8 @@ Future globalAlertDialog(
                   .labelLarge!
                   .copyWith(
                   color: colorOk ?? (labelActionButton == 'entendi'
-                      ? appDarkGreyColor : appNormalDangerColor)),
+                      ? appDarkGreyColor : labelActionButton == 'ok'
+                      ? appLightPrimaryColor : appNormalDangerColor)),
             ),
           )
         ]),
@@ -290,9 +300,9 @@ DateTime dateTimeFromString(String param) {
   return date;
 }
 
-String dateTimeAt(String date) {
+String dateTimeAt(String date, {levelOfPrecision = 1}) {
   String at = DateTimeFormat.relative(dateTimeFromString(date),
-      abbr: true, levelOfPrecision: 1, ifNow: 'Agora');
+      abbr: true, levelOfPrecision: levelOfPrecision, ifNow: 'Agora');
   return at.replaceAll('w', 's');
 }
 
@@ -322,6 +332,31 @@ bool checkUserType(String type) {
 logout() async {
   SignInController signInController = Get.find<SignInController>();
   signInController.logout();
+
+//  HomeController().dispose();
+//  HomeClientController().dispose();
+//  HomeProfessionalController().dispose();
+//  ChatController().dispose();
+//  EditController().dispose();
+//  ServiceController().dispose();
+//  ProfileController().dispose();
+}
+
+Future globalFunctionOpenChat({ProfileModel? profileParam, String? profileId}) async {
+  ProfileModel? profile;
+  if(profileParam == null && profileId != null && profileId.isNotEmpty) {
+    profile = await FirebaseService.getProfileModelData(profileId);
+  } else {
+    profile = profileParam;
+  }
+  if(profile != null) {
+    Get.lazyPut(()=>ChatController());
+    ChatController chatController = Get.find<ChatController>();
+    chatController.setSelectedChatProfile(profile);
+    Get.to(() => ChatDetailsPage(profile: profile!));
+  } else {
+    snackBar('Não foi possível encontrar o usuário');
+  }
 }
 
 // RANDOM TESTS
@@ -417,3 +452,4 @@ generateRandom(int type) async {
     }
   }
 }
+

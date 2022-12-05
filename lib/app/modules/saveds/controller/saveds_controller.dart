@@ -23,6 +23,6 @@ class SavedsController extends GetxController with LoaderMixin {
   }
 
   loadSavedProfiles() {
-    savedProfiles.value = authServices.profileModel.profilesSaved;
+    savedProfiles.value = authServices.userLogged.profilesSaved;
   }
 }

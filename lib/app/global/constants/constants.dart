@@ -23,6 +23,7 @@ BorderRadius defaultBorderRadius8 = BorderRadius.circular(8);
 BorderRadius defaultBorderRadius16 = BorderRadius.circular(16);
 BorderRadius defaultBorderRadius32 = BorderRadius.circular(32);
 BorderRadius defaultBorderRadius64 = BorderRadius.circular(64);
+Radius defaultCircularRadius8 = const Radius.circular(8);
 Radius defaultCircularRadius16 = const Radius.circular(16);
 Radius defaultCircularRadius32 = const Radius.circular(32);
 Radius defaultCircularRadius64 = const Radius.circular(64);

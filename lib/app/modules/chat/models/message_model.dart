@@ -1,24 +1,17 @@
-import 'dart:convert';
-
-import 'package:delivery_servicos/core/util/global_functions.dart';
-
 class MessageModel {
-  String firebaseId,
-      name,
-      phoneNumber;
-  List<int> image;
+  String message, dateSent;
+  bool isOwner;
 
   MessageModel({
-    this.firebaseId = '',
-    this.image = const [],
-    this.name = '',
-    this.phoneNumber = ''});
+    this.message = '',
+    this.dateSent = '',
+    this.isOwner = false,
+  });
 
   factory MessageModel.fromJson(Map<String, dynamic> json)=> MessageModel(
-    firebaseId: json['firebaseId'],
-    image: base64Decode(json['image']),
-    name: json['name'],
-    phoneNumber: json['phoneNumber'],
+    message: json['message'] ?? '',
+    dateSent: json['dateSent'] ?? '',
+    isOwner: json['isOwner'] ?? false,
   );
 
   static List<MessageModel> fromList(List<dynamic> l) {
@@ -30,14 +23,13 @@ class MessageModel {
   }
 
   Map<String, dynamic> toJson() => {
-    "firebaseId": firebaseId,
-    "name": name,
-    "image": base64Encode(image),
-    "phoneNumber": getRawPhoneNumber(phoneNumber),
+    "message": message,
+    "dateSent": dateSent,
+    "isOwner": isOwner,
   };
 
   @override
   String toString() {
-    return 'MessageModel($firebaseId, $name)';
+    return 'MessageModel($message, $dateSent, $isOwner)';
   }
 }

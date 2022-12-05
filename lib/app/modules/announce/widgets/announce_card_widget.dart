@@ -3,6 +3,7 @@ import 'package:delivery_servicos/app/global/widgets/buttons/custom_inkwell.dart
 import 'package:delivery_servicos/app/global/widgets/small/custom_containers_widget.dart';
 import 'package:delivery_servicos/app/modules/announce/announce_details_page.dart';
 import 'package:delivery_servicos/app/modules/announce/controller/announce_controller.dart';
+import 'package:delivery_servicos/app/modules/announce/controller/request_controller.dart';
 import 'package:delivery_servicos/app/modules/announce/model/service_model.dart';
 import 'package:delivery_servicos/core/util/global_functions.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +15,12 @@ import '../../../global/constants/styles_const.dart';
 
 class AnnounceRequestCardWidget extends StatelessWidget {
   final ServiceModel service;
+  final String? fromRoute;
+  final RequestController? controller;
   const AnnounceRequestCardWidget({
     required this.service,
+    this.fromRoute,
+    this.controller,
     Key? key}) : super(key: key);
 
   @override
@@ -25,7 +30,14 @@ class AnnounceRequestCardWidget extends StatelessWidget {
       backgroundColor: appExtraLightGreyColor,
       onTap: () {
         Get.lazyPut(() => AnnounceController(service: service));
-        Get.to(()=>AnnounceDetailsPage(service: service));
+        Get.to(()=>AnnounceDetailsPage(
+          service: service,
+          fromRoute: fromRoute,
+          onDeleteRequest: controller != null ? () async {
+            Get.back();
+            await controller!.removeMyRequest(service);
+          } : null,
+        ));
       },
       child: SizedBox(
         width: Get.width,
@@ -67,10 +79,10 @@ class AnnounceRequestCardWidget extends StatelessWidget {
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       shrinkWrap: true,
-                      itemCount: service.serviceExpertise!.length,
+                      itemCount: service.serviceExpertise.length,
                       itemBuilder: (context, i) => Padding(
-                        padding: EdgeInsets.only(right: i < service.serviceExpertise!.length-1 ? 4 : 0),
-                        child: SkillContainer(service.serviceExpertise![i]),
+                        padding: EdgeInsets.only(right: i < service.serviceExpertise.length-1 ? 4 : 0),
+                        child: SkillContainer(service.serviceExpertise[i]),
                       ),
                     ),
                   ),
@@ -86,7 +98,7 @@ class AnnounceRequestCardWidget extends StatelessWidget {
                           style: appStyle.bodySmall
                               ?.copyWith(color: appNormalGreyColor),
                           children: <TextSpan>[
-                            TextSpan(text: 'R\$', style: appStyle.bodySmall),
+                            TextSpan(text: 'R\$ ', style: appStyle.bodySmall),
                             TextSpan(text: '${service.minPrice}',
                               style: appStyle.bodyMedium?.copyWith(
                                   color: appNormalPrimaryColor, fontWeight: FontWeight.w600),
@@ -104,10 +116,13 @@ class AnnounceRequestCardWidget extends StatelessWidget {
                           Text(service.dateMin.toString().replaceAll(' ', '\nàs '),
                             style: appStyle.bodyMedium,
                             textAlign: TextAlign.center,),
-                          Text(' até ', style: appStyle.bodyMedium?.copyWith(color: appNormalGreyColor)),
-                          Text(service.dateMax.toString().replaceAll(' ', '\nàs '),
-                              style: appStyle.bodyMedium,
-                              textAlign: TextAlign.center),
+                          if(service.dateMax.toString() != service.dateMin.toString())
+                            ...[
+                              Text(' até ', style: appStyle.bodyMedium?.copyWith(color: appNormalGreyColor)),
+                              Text(service.dateMax.toString().replaceAll(' ', '\nàs '),
+                                style: appStyle.bodyMedium,
+                                textAlign: TextAlign.center),
+                            ],
                         ],
                       )
                     ],

@@ -55,8 +55,8 @@ class ProfilePage extends GetView<ProfileController> {
         ),
       ],
       pageTitle: checkUserType(profileView != null ? profileView!.profileType : controller.profileModel.profileType)
-          ? 'Perfil Profissional'
-          : 'Perfil Cliente',
+          ? (profileView != null ? 'Perfil do Profissional' : 'Meu Perfil')
+          : (profileView != null ? 'Perfil do Cliente' : 'Meu Perfil'),
       body: checkUserType(profileView != null ? profileView!.profileType : controller.profileModel.profileType)
           ? ProfessionalDetailsPage(profileView: profileView)
           : ClientDetailsPage(profileView: profileView),

@@ -147,8 +147,10 @@ Widget componentButtonIconText({
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label),
-                const SizedBox(height: 8),
+                if(label != '') ...[
+                  Text(label),
+                  const SizedBox(height: 8),
+                ],
                 Text(content, style: appStyle.titleLarge?.copyWith(fontWeight: FontWeight.w600)),
               ],
             ),

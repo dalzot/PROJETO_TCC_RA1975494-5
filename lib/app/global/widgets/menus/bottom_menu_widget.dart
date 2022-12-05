@@ -44,7 +44,7 @@ class BottomMenuWidget extends StatelessWidget {
                     Get.offNamed(Routes.home);
                   },
                 ),
-                if(checkUserType(authService.profileModel.profileType)) // SE FOR PROFISSIONAL MOSTRA O BOTÃO DE SERVIÇOS
+                if(checkUserType(authService.userLogged.profileType)) // SE FOR PROFISSIONAL MOSTRA O BOTÃO DE SERVIÇOS
                   generateButton(
                     label: 'SERVIÇOS',
                     icon: Icons.home_repair_service_rounded,
@@ -54,7 +54,7 @@ class BottomMenuWidget extends StatelessWidget {
                       Get.offNamed(Routes.myServices);
                     },
                   ),
-                if(!checkUserType(authService.profileModel.profileType)) // SE FOR CLIENTE MOSTRA O BOTÃO DOS ANÚNCIOS QUE ELE FEZ
+                if(!checkUserType(authService.userLogged.profileType)) // SE FOR CLIENTE MOSTRA O BOTÃO DOS ANÚNCIOS QUE ELE FEZ
                   generateButton(
                     label: 'MEUS PEDIDOS',
                     icon: Icons.receipt_long_rounded,

@@ -217,7 +217,7 @@ class EditController extends GetxController with LoaderMixin {
 
   // Envia os dados para o firebase
   submitDataToFirebase() async {
-    ProfileModel currentProfile = _authService!.profileModel;
+    ProfileModel currentProfile = _authService!.userLogged;
 
     loading.value = false;
     ProfileModel profileData = ProfileModel(
@@ -247,7 +247,7 @@ class EditController extends GetxController with LoaderMixin {
     loading.value = true;
 
     ProfileModel profile = await setUserByFirebaseData(profileData);
-    _authService!.profileModel.updateProfile(profile);
+    _authService!.userLogged.updateProfile(profile);
 
     loading.value = false;
     setNextEditStep();

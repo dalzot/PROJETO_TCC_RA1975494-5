@@ -206,7 +206,7 @@ const MaterialColor colorGrey = MaterialColor(0xFF4D4D4D, {
 
 const colorWarning = Color(0xFFFFB717);
 const colorDanger = Color(0xFFd43742);
-const colorSuccess = Color(0xFF8CC63E);
+const colorSuccess = Color(0xFF60c227);
 const colorBronze = Color(0xFFCD7F32);
 const colorPrata = Color(0xFFa3a2a2);
 const colorGold = Color(0xFFf0cd16);

@@ -3,7 +3,7 @@ import 'package:delivery_servicos/core/util/global_functions.dart';
 import 'proposal_model.dart';
 
 class ServiceModel {
-  String?
+  String
       serviceId,
       clientId,
       clientMessagingId,
@@ -28,39 +28,39 @@ class ServiceModel {
       status,
       minPrice,
       maxPrice;
-  List<String>?
+  List<String>
       serviceExpertise,
       servicePayment;
-  List<ProposalModel>? proposals;
+  List<ProposalModel> proposals;
 
   ServiceModel({
-    this.serviceId,
-    this.clientId,
-    this.clientMessagingId,
-    this.professionalId,
-    this.cep,
-    this.district,
-    this.complement,
-    this.province,
-    this.city,
-    this.street,
-    this.number,
-    this.observations,
-    this.clientName,
-    this.phone1,
-    this.phone2,
-    this.whatsapp,
-    this.minPrice,
-    this.maxPrice,
-    this.dateMin,
-    this.dateMax,
-    this.serviceExpertise,
-    this.servicePayment,
-    this.dateCreated,
-    this.dateUpdated,
-    this.dateApproved,
-    this.status,
-    this.proposals,
+    this.serviceId = '',
+    this.clientId = '',
+    this.clientMessagingId = '',
+    this.professionalId = '',
+    this.cep = '',
+    this.district = '',
+    this.complement = '',
+    this.province = '',
+    this.city = '',
+    this.street = '',
+    this.number = '',
+    this.observations = '',
+    this.clientName = '',
+    this.phone1 = '',
+    this.phone2 = '',
+    this.whatsapp = '',
+    this.minPrice = '',
+    this.maxPrice = '',
+    this.dateMin = '',
+    this.dateMax = '',
+    this.serviceExpertise = const [],
+    this.servicePayment = const [],
+    this.dateCreated = '',
+    this.dateUpdated = '',
+    this.dateApproved = '',
+    this.status = '',
+    this.proposals = const [],
   });
 
   factory ServiceModel.fromJson(Map<String, dynamic> json)=> ServiceModel(

@@ -1,5 +1,5 @@
 import 'package:delivery_servicos/app/global/widgets/body/custom_scaffold.dart';
-import 'package:delivery_servicos/app/modules/announce/controller/announce_controller.dart';
+import 'package:delivery_servicos/app/modules/announce/controller/request_controller.dart';
 import 'package:delivery_servicos/app/modules/profile/models/profile_model.dart';
 import 'package:delivery_servicos/core/theme/app_color.dart';
 import 'package:delivery_servicos/routes/routes.dart';
@@ -20,7 +20,7 @@ import '../../../global/widgets/modal_sheet/modal_bottom_sheet.dart';
 import '../../../global/widgets/small/custom_containers_widget.dart';
 import '../../../global/widgets/textfields/text_field_widget.dart';
 
-class AddRequestPage extends GetView<AnnounceController> {
+class AddRequestPage extends GetView<RequestController> {
   AddRequestPage({Key? key}) : super(key: key);
   final _formKey = GlobalKey<FormState>();
   final widgetKey = GlobalKey();

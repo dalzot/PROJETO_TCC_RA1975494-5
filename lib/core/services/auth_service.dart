@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:delivery_servicos/app/modules/home/controller/home_controller.dart';
 import 'package:delivery_servicos/app/modules/profile/models/profile_model.dart';
 import 'package:delivery_servicos/app/modules/sign_up/controller/sign_up_controller.dart';
 import 'package:delivery_servicos/core/services/firebase_service.dart';
@@ -23,7 +24,7 @@ class AuthServices extends GetxService {
   final FirebaseAuth auth = FirebaseAuth.instance;
   String authServiceError = '';
 
-  ProfileModel profileModel = ProfileModel();
+  ProfileModel userLogged = ProfileModel();
 
   Future<AuthServices> init() async {
     return this;
@@ -41,10 +42,12 @@ class AuthServices extends GetxService {
   handleSignInAccount(ProfileModel? profileUser) async {
     if(profileUser != null) {
       if(profileUser.docCpf.isNotEmpty) {
+        HomeController homeController = Get.find<HomeController>();
         String? firebaseMessagingId = await FirebaseService.getFirebaseMessagingToken();
-        profileModel = profileUser;
-        profileModel.firebaseMessagingId = firebaseMessagingId ?? '';
-        await FirebaseService.updateProfileData(profileModel.firebaseId, profileModel.toFirebaseToken());
+        userLogged = profileUser;
+        userLogged.firebaseMessagingId = firebaseMessagingId ?? '';
+        await FirebaseService.updateProfileData(userLogged.firebaseId, userLogged.toFirebaseToken());
+        homeController.setUserLogged(userLogged);
         snackBar('Login efetuado com sucesso');
         Get.offAllNamed(Routes.home);
       } else {
@@ -114,15 +117,15 @@ class AuthServices extends GetxService {
   }
 
   Future<ProfileModel> setUserByFirebaseData(ProfileModel profileData) async {
-    profileModel = profileData;
+    userLogged = profileData;
     await FirebaseService.setProfileData(profileData.firebaseId, profileData.toJson());
-    handleSignInAccount(profileModel);
+    handleSignInAccount(userLogged);
     return profileData;
   }
 
   Future<void> deleteUserData() async {
     await FirebaseService.deleteProfileData(auth.currentUser!.uid);
     await auth.currentUser!.delete();
-    profileModel = ProfileModel();
+    userLogged = ProfileModel();
   }
 }

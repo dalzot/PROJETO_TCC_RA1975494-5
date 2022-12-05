@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:delivery_servicos/app/global/constants/constants.dart';
 import 'package:delivery_servicos/app/modules/announce/model/service_model.dart';
+import 'package:delivery_servicos/app/modules/chat/models/chat_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -99,7 +100,11 @@ class FirebaseService {
   }
   static Future getChatModelData(doc) async {
     DocumentSnapshot docChat = await firestore.collection(collectionChat).doc(doc).get();
-    return MessageModel.fromJson(docChat.data() as Map<String, dynamic>);
+    if(docChat.exists) {
+      return ChatModel.fromJson(docChat.data() as Map<String, dynamic>);
+    } else {
+      return null;
+    }
   }
   static Future getListChatModelDataById(where, equalTo) async {
     QuerySnapshot docsChat = await firestore.collection(collectionChat)
@@ -108,5 +113,27 @@ class FirebaseService {
     List<MessageModel> allChatsModel = docsChat.docs
         .map((d) => MessageModel.fromJson(d.data() as Map<String, dynamic>)).toList();
     return allChatsModel;
+  }
+
+  static Stream<DocumentSnapshot> getStreamChatModelData(doc) {
+    return firestore.collection(collectionChat).doc(doc).snapshots();
+  }
+  static Stream<QuerySnapshot> getStreamListChatModelDataById(equalTo) {
+    List<Stream<QuerySnapshot>> allQuerys = [];
+
+    var checkOwnerId = firestore.collection(collectionChat)
+        .where('ownerProfileId', isEqualTo: equalTo)
+        .snapshots();
+    var checkToId = firestore.collection(collectionChat)
+        .where('toProfileId', isEqualTo: equalTo)
+        .snapshots();
+
+    allQuerys.add(checkOwnerId);
+    allQuerys.add(checkToId);
+
+    return allQuerys.first;
+    return firestore.collection(collectionChat)
+        .where('ownerProfileId', isEqualTo: equalTo)
+        .where('toProfileId', isEqualTo: equalTo).snapshots();
   }
 }

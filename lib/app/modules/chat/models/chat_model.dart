@@ -1,22 +1,46 @@
 import 'dart:convert';
 
+import 'package:delivery_servicos/app/modules/chat/models/message_model.dart';
+
 class ChatModel {
-  String firebaseId,
-      name,
-      phoneNumber;
-  List<int> image;
+  String chatId,
+      toMessagingId,
+      toProfileId,
+      toName,
+      ownerMessagingId,
+      ownerProfileId,
+      ownerName;
+  List<int> toImage,
+      ownerImage;
+  List<MessageModel> toMessages,
+      ownerMessages;
 
   ChatModel({
-    this.firebaseId = '',
-    this.image = const [],
-    this.name = '',
-    this.phoneNumber = ''});
+    this.chatId = '',
+    this.toMessagingId = '',
+    this.toProfileId = '',
+    this.toName = '',
+    this.ownerMessagingId = '',
+    this.ownerProfileId = '',
+    this.ownerName = '',
+    this.toImage = const [],
+    this.ownerImage = const [],
+    this.toMessages = const [],
+    this.ownerMessages = const [],
+  });
 
   factory ChatModel.fromJson(Map<String, dynamic> json)=> ChatModel(
-    firebaseId: json['firebaseId'],
-    image: base64Decode(json['image']),
-    name: json['name'],
-    phoneNumber: json['phoneNumber'],
+    chatId: json['chatId'],
+    toMessagingId: json['toMessagingId'],
+    toProfileId: json['toProfileId'],
+    toName: json['toName'],
+    ownerMessagingId: json['ownerMessagingId'],
+    ownerProfileId: json['ownerProfileId'],
+    ownerName: json['ownerName'],
+    toImage: base64Decode(json['toImage']),
+    ownerImage: base64Decode(json['ownerImage']),
+    toMessages: MessageModel.fromList(json['toMessages'] ?? []),
+    ownerMessages: MessageModel.fromList(json['ownerMessages'] ?? []),
   );
 
   static List<ChatModel> fromList(List<dynamic> l) {
@@ -28,13 +52,29 @@ class ChatModel {
   }
 
   Map<String, dynamic> toJson() => {
-    "firebaseId": firebaseId,
-    "name": name,
-    "image": base64Encode(image),
+    "chatId": chatId,
+    "toMessagingId": toMessagingId,
+    "toProfileId": toProfileId,
+    "toName": toName,
+    "ownerMessagingId": ownerMessagingId,
+    "ownerProfileId": ownerProfileId,
+    "ownerName": ownerName,
+    "toImage": base64Encode(toImage),
+    "ownerImage": base64Encode(ownerImage),
+    "toMessages": MessageModel.fromList(toMessages),
+    "ownerMessages": MessageModel.fromList(ownerMessages),
+  };
+
+  Map<String, dynamic> updateOwnerMessages() => {
+    "ownerMessages": MessageModel.toList(ownerMessages),
+  };
+
+  Map<String, dynamic> updateToMessages() => {
+    "toMessages": MessageModel.toList(toMessages),
   };
 
   @override
   String toString() {
-    return 'ChatModel($firebaseId, $name)';
+    return 'ChatModel($chatId, owner: $ownerName, to: $toName)';
   }
 }

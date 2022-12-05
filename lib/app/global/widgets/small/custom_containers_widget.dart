@@ -1,3 +1,6 @@
+import 'package:delivery_servicos/app/modules/chat/chat_details.dart';
+import 'package:delivery_servicos/app/modules/chat/controller/chat_controller.dart';
+import 'package:delivery_servicos/core/services/firebase_service.dart';
 import 'package:delivery_servicos/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_social_button/flutter_social_button.dart';
@@ -144,7 +147,7 @@ Widget RateContainer(double rate) {
 
 
 Widget LongButton(String title, ContactButtonType buttonType, BuildContext context,
-{String phoneNumber = '', String phoneNumber2 = '', String profileId = ''}) {
+{String phoneNumber = '', String phoneNumber2 = '', ProfileModel? profileParam, String profileId = ''}) {
   IconData iconData =
   buttonType == ContactButtonType.call ? FontAwesomeIcons.phoneAlt
       : buttonType == ContactButtonType.chat ? FontAwesomeIcons.solidComment
@@ -191,8 +194,19 @@ Widget LongButton(String title, ContactButtonType buttonType, BuildContext conte
                 title: "Escolha uma opção");
             break;
           case ContactButtonType.chat:
-            if(profileId.isNotEmpty) {
-              Get.toNamed(Routes.chatDetails, arguments: [profileId]);
+            if(profileParam != null || profileId.isNotEmpty) {
+              openModalBottomSheet(context,
+                  child: componentButtonIconText(
+                      label: '',
+                      content: 'Iniciar conversa',
+                      iconType: Icons.mark_chat_read_rounded,
+                      iconRight: Icons.arrow_forward_ios_rounded,
+                      onTap: () async {
+                        Navigator.of(context).pop();
+                        await globalFunctionOpenChat(profileParam: profileParam, profileId: profileId);
+                      }),
+                  heightModal: 285,
+                  title: "Escolha uma opção");
             }
             break;
           case ContactButtonType.share:
