@@ -171,7 +171,6 @@ class AnnounceDetailsPage extends GetView<AnnounceController> {
               && controller.isTermsAccepted.isTrue ? ()  async {
             Get.back();
             await controller.submitProposalToClient(service);
-//              Get.offAllNamed(Routes.myServices);
           } : null,
           color: appNormalPrimaryColor,
         ),

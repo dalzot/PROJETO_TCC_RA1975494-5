@@ -95,6 +95,9 @@ class RequestController extends GetxController with LoaderMixin {
     serviceCityController.text = userLogged.addressCity;
     serviceStreetController.text = userLogged.addressStreet;
     serviceNumberController.text = userLogged.addressNumber;
+    serviceMinPriceController.clear();
+    serviceMaxPriceController.clear();
+    serviceObservationsController.clear();
 
     serviceCep.value = getMaskedZipCode(userLogged.addressCEP);
     serviceDistrict.value = userLogged.addressDistrict;
@@ -349,6 +352,8 @@ class RequestController extends GetxController with LoaderMixin {
     serviceStreetController.text = '';
     serviceNumberController.text = '';
     serviceObservationsController.text = '';
+    serviceMinPriceController.text = '';
+    serviceMaxPriceController.text = '';
     resetFields();
   }
 

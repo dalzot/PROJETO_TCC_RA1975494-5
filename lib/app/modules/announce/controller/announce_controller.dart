@@ -1,79 +1,33 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:delivery_servicos/app/global/constants/constants.dart';
 import 'package:delivery_servicos/app/global/notification/custom_local_notification.dart';
-import 'package:delivery_servicos/app/modules/announce/controller/service_controller.dart';
 import 'package:delivery_servicos/app/modules/announce/model/proposal_model.dart';
-import 'package:delivery_servicos/app/modules/home/controller/home_controller.dart';
 import 'package:delivery_servicos/core/mixin/loader_mixin.dart';
 import 'package:delivery_servicos/core/services/auth_service.dart';
 import 'package:delivery_servicos/core/services/firebase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:search_cep/search_cep.dart';
 
 import '../../../../core/util/global_functions.dart';
 import '../../../../routes/app_pages.dart';
-import '../../home/controller/home_client_controller.dart';
 import '../../home/controller/home_professional_controller.dart';
 import '../../profile/models/profile_model.dart';
 import '../model/service_model.dart';
-import 'request_controller.dart';
 
 class AnnounceController extends GetxController with LoaderMixin {
-  final ServiceModel? service;
+  ServiceModel? service;
   AnnounceController({this.service});
 
   AuthServices authServices = Get.find<AuthServices>();
-  HomeController homeController = Get.find<HomeController>();
   HomeProfessionalController homeProfessionalController = Get.find<HomeProfessionalController>();
-//  HomeClientController homeClientController = Get.find<HomeClientController>();
-//  RequestController requestsController = Get.find<RequestController>();
-//  ServiceController servicesController = Get.find<ServiceController>();
 
   RxBool loading = false.obs;
   RxBool loadingMyRequests = false.obs;
 
   RxList<ServiceModel> myServicesRequests = <ServiceModel>[].obs;
+  RxList<ProposalModel> myServicesProposals = <ProposalModel>[].obs;
 
   late ProfileModel userLogged;
 
   RxBool isTermsAccepted = false.obs;
-//  RxBool isValidatedForm = false.obs;
-//  RxBool isValidatedPayments = false.obs;
-//  RxBool isValidatedExpertises = false.obs;
-//  RxBool isValidatedDateService = false.obs;
-//  RxBool isValidatedMoneyValues = false.obs;
-//  RxString cepError = ''.obs;
-//  final serviceCepController = TextEditingController();
-//  final serviceDistrictController = TextEditingController();
-//  final serviceComplementController = TextEditingController();
-//  final serviceProvinceController = TextEditingController();
-//  final serviceCityController = TextEditingController();
-//  final serviceStreetController = TextEditingController();
-//  final serviceNumberController = TextEditingController();
-//  final serviceObservationsController = TextEditingController();
-//  final serviceMinPriceController = TextEditingController();
-//  final serviceMaxPriceController = TextEditingController();
-//  RxList<String> serviceExpertise = <String>[].obs;
-//  RxList<String> servicePayment = <String>[].obs;
-//
-//  RxInt createServiceStep = 0.obs;
-//  RxString serviceCep = ''.obs;
-//  RxString serviceDistrict = ''.obs;
-//  RxString serviceComplement = ''.obs;
-//  RxString serviceProvince = ''.obs;
-//  RxString serviceCity = ''.obs;
-//  RxString serviceStreet = ''.obs;
-//  RxString serviceNumber = ''.obs;
-//  RxString serviceObservations = ''.obs;
-//  RxString serviceClientName = ''.obs;
-//  RxString servicePhone1 = ''.obs;
-//  RxString servicePhone2 = ''.obs;
-//  RxString serviceWhatsapp = ''.obs;
-//  RxString serviceMinPrice = '0,00'.obs;
-//  RxString serviceMaxPrice = '0,00'.obs;
-//  Rx<DateTime> serviceDateMin = DateTime.now().obs;
-//  Rx<DateTime> serviceDateMax = DateTime.now().obs;
 
   Rx<ProposalModel>? myProposal;
   RxBool isValidatedProposalPrice = false.obs;
@@ -83,24 +37,17 @@ class AnnounceController extends GetxController with LoaderMixin {
   @override
   void onInit() {
     loaderListener(loading);
-    print('onInit - Get.put(()=>AnnounceController');
-
+    loadingMyRequests.value = true;
     userLogged = authServices.userLogged;
     loadInitialInfos();
-
-    print('Get.currentRoute: ${Get.currentRoute}');
     super.onInit();
   }
 
   @override
   void onReady() {
     loadingMyRequests.value = true;
-
     loadInitialInfos();
-
     userLogged = authServices.userLogged;
-    print('onReady - Get.put(()=>AnnounceController');
-
     loadingMyRequests.value = false;
     super.onReady();
   }
@@ -123,13 +70,15 @@ class AnnounceController extends GetxController with LoaderMixin {
 
   loadInitialInfos() {
     reloadMyProposal();
-//    serviceCepController.text = getMaskedZipCode(userLogged.addressCEP);
-//    serviceDistrictController.text = userLogged.addressDistrict;
-//    serviceComplementController.text = userLogged.addressComplement;
-
     proposalObservationsController.text = '';
     proposalPriceController.text = '';
     isValidatedProposalPrice.value = false;
+  }
+
+  setServiceAndProposals(ServiceModel serviceModel) async {
+    service = serviceModel;
+    myServicesProposals.addAll(serviceModel.proposals);
+//    await Future.delayed(const Duration(seconds: 1));
   }
 
   setServiceProposalPrice(value) {
@@ -212,12 +161,50 @@ class AnnounceController extends GetxController with LoaderMixin {
     snackBar('Proposta removida com sucesso');
   }
 
-  rejectProposal(ServiceModel service, ProposalModel proposal) {
+  acceptOrRecuseProposal(ServiceModel serviceParam, ProposalModel proposal, bool acceptOrRecuse, {String? reason}) async {
+    loading.value = false;
+    loading.value = true;
+    List<ProposalModel> proposalsEdited = [];
 
-  }
+    proposal.status = acceptOrRecuse ? 'aprovada' : 'recusada';
+    proposal.dateUpdated = dateNowString();
+    proposal.reasonRecuse = reason ?? '';
+    proposalsEdited.add(proposal);
 
-  acceptProposal(ServiceModel service, ProposalModel proposal) {
+    for(ProposalModel p in serviceParam.proposals) {
+      if(p.professionalId != proposal.professionalId) {
+        if(acceptOrRecuse) {
+          p.status = 'recusada';
+          p.dateUpdated = dateNowString();
+          p.reasonRecuse = 'O cliente aceitou outra proposta.\n'
+              'Mas não se preocupe, existem milhares de ofertas de serviço disponíveis no app.';
 
+          await CustomLocalNotification().sendPrivateMessaging('Ahh! Sua proposta foi recusada 😏',
+              "'${userLogged.name.split(' ')[0]}' acabou aceitando outra proposta.'\n"
+                  "Acesse o app para conferir.",
+              serviceParam.serviceId.toString(),
+              p.professionalMessagingId.toString());
+        }
+        proposalsEdited.add(p);
+      }
+    }
+    serviceParam.proposals = proposalsEdited;
+    serviceParam.professionalId = proposal.professionalId.toString();
+    serviceParam.dateUpdated = dateNowString();
+    serviceParam.status = 'executando';
+
+    await FirebaseService.updateServiceData(serviceParam.serviceId, serviceParam.toProposal())
+        .then((value) async {
+      await CustomLocalNotification().sendPrivateMessaging(
+          acceptOrRecuse ? 'Eba! Sua proposta foi aprovada 😃' : 'Ahh! Sua proposta foi recusada 😏',
+          "'${userLogged.name.split(' ')[0]}' ${acceptOrRecuse ? 'aprovou' : 'recusou'} sua proposta no serviço "
+              "'${serviceParam.serviceExpertise.first}.'\n"
+              "Acesse o app para conferir.",
+          serviceParam.serviceId.toString(),
+          proposal.professionalMessagingId.toString());
+    });
+    myServicesProposals.value = serviceParam.proposals;
+    loading.value = false;
   }
 
   bool checkMyProposal() {

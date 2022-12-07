@@ -26,13 +26,13 @@ class ProposalReceivedWidget extends GetView<AnnounceController> {
         if(controller.myProposal != null)
           CurrentMyProposal(context, controller.myProposal!.value),
         if(controller.myProposal == null)
-          service.proposals.isEmpty ?
+          controller.myServicesProposals.isEmpty ?
           const Expanded(
               child: Center(
                   child: EmptyListWidget(
                       message: 'Nenhuma proposta recebida'))) :
           GlobalListViewWidget(
-            children: service.proposals.map((e) =>
+            children: controller.myServicesProposals.map((e) =>
                 ProposalWidget(context, e)).toList(),
           ),
       ],
@@ -61,7 +61,9 @@ class ProposalReceivedWidget extends GetView<AnnounceController> {
           const Divider(height: 16, thickness: 1, color: appLightGreyColor),
           Text('Observações informadas:',
               textAlign: TextAlign.center,
-              style: appStyle.bodySmall),
+              style: appStyle.bodySmall?.copyWith(
+                decoration: TextDecoration.underline,
+              )),
           const SizedBox(height: 4),
           Row(
             children: [
@@ -76,48 +78,54 @@ class ProposalReceivedWidget extends GetView<AnnounceController> {
           const Divider(height: 16, thickness: 1, color: appLightGreyColor),
           Row(
             children: [
-              Expanded(
-                child: CustomInkWell(
-                  onTap: () => globalAlertDialog(
-                      title: 'Recusar proposta',
-                      text: 'Você deseja recusar essa proposta?',
-                      labelActionButton: 'SIM',
-                      onPressedAction: () async {
-                        await controller.rejectProposal(service, proposal);
-                      }),
-                  backgroundColor: colorDanger.withOpacity(0.75),
-                  borderRadius: defaultBorderRadius8,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.close_rounded, color: appExtraLightGreyColor,),
-                        const SizedBox(width: 8),
-                        Text('RECUSAR',
-                            softWrap: true,
-                            textAlign: TextAlign.start,
-                            style: appStyle.bodySmall?.copyWith(
-                                fontWeight: FontWeight.w500,
-                                color: appExtraLightGreyColor)),
-                      ],
+              if(proposal.status == 'enviada')...[
+                Expanded(
+                  child: CustomInkWell(
+                    onTap: () => globalAlertDialog(
+                        title: 'Recusar proposta',
+                        text: 'Você deseja recusar essa proposta?',
+                        labelActionButton: 'SIM',
+                        onPressedAction: () async {
+                          //Get.back();
+                          await controller.acceptOrRecuseProposal(service, proposal, false,
+                              reason: 'Ainda não encontrou uma proposta adequada para o serviço solicitado.');
+                        }),
+                    backgroundColor: colorDanger.withOpacity(0.75),
+                    borderRadius: defaultBorderRadius8,
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.close_rounded, color: appExtraLightGreyColor,),
+                          const SizedBox(width: 8),
+                          Text('RECUSAR',
+                              softWrap: true,
+                              textAlign: TextAlign.start,
+                              style: appStyle.bodySmall?.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: appExtraLightGreyColor)),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 8),
+                const SizedBox(width: 8),
+              ],
               Expanded(
                 child: CustomInkWell(
-                  onTap: () => globalAlertDialog(
+                  onTap: proposal.status == 'enviada' ? () => globalAlertDialog(
                       title: 'Aceitar proposta',
                       text: 'Você deseja aceitar essa proposta?',
                       labelActionButton: 'SIM',
                       colorOk: colorSuccess,
                       onPressedAction: () async {
-                        await controller.acceptProposal(service, proposal);
-                      }),
-                  backgroundColor: colorSuccess.withOpacity(0.75),
+                        //Get.back();
+                        await controller.acceptOrRecuseProposal(service, proposal, true);
+                      }) : null,
+                  backgroundColor: proposal.status == 'recusada'
+                      ? colorDanger.withOpacity(0.5) : colorSuccess.withOpacity(0.5),
                   borderRadius: defaultBorderRadius8,
                   child: Padding(
                     padding: const EdgeInsets.all(4.0),
@@ -125,9 +133,13 @@ class ProposalReceivedWidget extends GetView<AnnounceController> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const Icon(Icons.check_rounded, color: appExtraLightGreyColor,),
+                        Icon(
+                          proposal.status == 'recusada'
+                              ? Icons.close_rounded : Icons.check_rounded,
+                          color: appExtraLightGreyColor),
                         const SizedBox(width: 8),
-                        Text('ACEITAR',
+                        Text(proposal.status == 'enviada' ? 'ACEITAR'
+                            : proposal.status == 'aprovada' ? 'APROVADA' : 'RECUSADA',
                             softWrap: true,
                             textAlign: TextAlign.start,
                             style: appStyle.bodySmall?.copyWith(

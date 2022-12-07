@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../core/theme/app_color.dart';
+import '../../../../routes/app_pages.dart';
 import '../../../global/constants/constants.dart';
 import '../../../global/constants/styles_const.dart';
 
@@ -28,8 +29,12 @@ class AnnounceRequestCardWidget extends StatelessWidget {
     return CustomInkWell(
       borderRadius: BorderRadius.zero,
       backgroundColor: appExtraLightGreyColor,
-      onTap: () {
+      onTap: () async {
         Get.lazyPut(() => AnnounceController(service: service));
+        if(fromRoute == Routes.myRequests) {
+          AnnounceController announceController = Get.find();
+          await announceController.setServiceAndProposals(service);
+        }
         Get.to(()=>AnnounceDetailsPage(
           service: service,
           fromRoute: fromRoute,
@@ -56,6 +61,7 @@ class AnnounceRequestCardWidget extends StatelessWidget {
                         child: Text('${service.clientName}', style: appStyle.bodyLarge
                             ?.copyWith(color: appNormalPrimaryColor, fontWeight: FontWeight.w600)),
                       ),
+                      Icon(getIconByStatus(service.status), color: getColorByStatus(service.status)),
                       const Icon(Icons.open_in_new_rounded, color: appNormalPrimaryColor),
                     ],
                   ),
@@ -141,6 +147,16 @@ class AnnounceRequestCardWidget extends StatelessWidget {
   }
 
   Color getColorByStatus(status) {
-    return status == 1 ? colorSuccess : colorDanger;
+    return service.status == 'disponível' ? appLightPrimaryColor // Disponível
+        : service.status == 'finalizado' ? colorSuccess // Finalizada
+        : service.status == 'avaliar' ? colorSuccess // Não avaliado
+        : colorWarning; // Executando
+  }
+
+  IconData getIconByStatus(status) {
+    return service.status == 'disponível' ? Icons.stream // Disponível
+        : service.status == 'finalizado' ? Icons.done_all_outlined // Finalizada
+        : service.status == 'avaliar' ? Icons.star_outline_rounded // Não avaliado
+        : Icons.wifi_protected_setup_rounded; // Executando
   }
 }

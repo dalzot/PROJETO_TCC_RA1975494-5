@@ -45,6 +45,7 @@ class SocialTabFormWidget extends StatelessWidget {
         TextFieldWidget(
             label: "Whatsapp",
             hintText: '(49) 9 1234-1234',
+            textInputAction: TextInputAction.next,
             type: const TextInputType.numberWithOptions(),
             controller: controller.whatsappController,
             iconFa: const FaIcon(FontAwesomeIcons.whatsapp),
@@ -58,6 +59,7 @@ class SocialTabFormWidget extends StatelessWidget {
             hintText: '@HeyJobs',
             controller: controller.telegramController,
             type: TextInputType.text,
+            textInputAction: TextInputAction.next,
             iconFa: const FaIcon(FontAwesomeIcons.telegramPlane),
             inputFormatter: [
               FilteringTextInputFormatter.deny(RegExp('[ ]')),
@@ -67,6 +69,7 @@ class SocialTabFormWidget extends StatelessWidget {
             label: "Instagram",
             hintText: '@heyjobs.app',
             type: TextInputType.text,
+            textInputAction: TextInputAction.next,
             controller: controller.instagramController,
             iconFa: const FaIcon(FontAwesomeIcons.instagram),
             inputFormatter: [
@@ -77,6 +80,7 @@ class SocialTabFormWidget extends StatelessWidget {
             label: "Facebook",
             hintText: '/heyjobs',
             type: TextInputType.text,
+            textInputAction: TextInputAction.next,
             controller: controller.facebookController,
             iconFa: const FaIcon(FontAwesomeIcons.facebookF),
             inputFormatter: [
@@ -87,6 +91,7 @@ class SocialTabFormWidget extends StatelessWidget {
             label: "Linkedin",
             hintText: '/heyjobs',
             type: TextInputType.text,
+            textInputAction: TextInputAction.done,
             controller: controller.linkedinController,
             iconFa: const FaIcon(FontAwesomeIcons.linkedinIn),
             inputFormatter: [

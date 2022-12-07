@@ -217,16 +217,17 @@ Future globalAlertDialog(
       required String labelActionButton,
       required void Function() onPressedAction,
       String? text,
+      Widget? child,
     Color? colorOk}) {
   const String labelBackButton = 'voltar';
   return Get.dialog(
     AlertDialog(
         title: Text(title,
           style: Get.textTheme.titleSmall),
-        content: text != null ? SingleChildScrollViewWidget(
+        content: child ?? (text != null ? SingleChildScrollViewWidget(
           child: Text(text,
             style: Get.textTheme.bodyMedium),
-        ) : null,
+        ) : null),
         actions: [
           Visibility(
             visible: labelActionButton != 'entendi' && labelActionButton != 'ok',

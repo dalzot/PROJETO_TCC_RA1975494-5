@@ -8,7 +8,7 @@ class ProposalModel {
       dateCreated,
       dateUpdated,
       reasonRecuse,
-      status, // aceito | recusado
+      status, // aprovada | recusada
       price;
 
   ProposalModel({

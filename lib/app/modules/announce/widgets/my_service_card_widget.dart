@@ -24,15 +24,18 @@ class MyServiceCardWidget extends GetView<ServiceController> {
   ProposalModel? myServiceProposal;
   @override
   Widget build(BuildContext context) {
-    if(myServiceProposal == null && service.proposals!.isNotEmpty) {
-      myServiceProposal = service.proposals!.firstWhere(
+    if(myServiceProposal == null && service.proposals.isNotEmpty) {
+      myServiceProposal = service.proposals.firstWhere(
               (e) => e.professionalId == controller.userLogged.firebaseId);
     }
     return CustomInkWell(
       borderRadius: BorderRadius.zero,
       backgroundColor: appExtraLightGreyColor,
       onTap: () {
-        Get.to(()=>AnnounceDetailsPage(service: service, myServiceProposal: myServiceProposal, fromRoute: Routes.myServices));
+        Get.to(()=>AnnounceDetailsPage(
+            service: service,
+            myServiceProposal: myServiceProposal,
+            fromRoute: Routes.myServices));
       },
       child: SizedBox(
         width: Get.width,

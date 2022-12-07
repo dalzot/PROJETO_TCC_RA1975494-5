@@ -25,7 +25,7 @@ class ServiceModel {
       dateCreated,
       dateUpdated,
       dateApproved,
-      status,
+      status, // disponível | executando | avaliar | finalizado
       minPrice,
       maxPrice;
   List<String>
@@ -128,11 +128,11 @@ class ServiceModel {
     'dateUpdated': dateUpdated,
     'dateApproved': dateApproved,
     'status': status, // aberto | concluído
-    'proposals': ProposalModel.toList(proposals!),
+    'proposals': ProposalModel.toList(proposals),
   };
 
   Map<String, dynamic> toProposal() => {
-    'proposals': ProposalModel.toList(proposals!),
+    'proposals': ProposalModel.toList(proposals),
   };
 
   @override

@@ -57,10 +57,6 @@ class HomeFiltersWidget extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    print('${checkUserType(controller.userLogged.profileType)}'
-        '&& ${setTypeFilter != null && typeFilter != null} \n'
-        '${controller.userLogged.profileType}'
-        '&& setTypeFilter != null && typeFilter != null');
     return GlobalListViewWidget(
       children: [
         Visibility(

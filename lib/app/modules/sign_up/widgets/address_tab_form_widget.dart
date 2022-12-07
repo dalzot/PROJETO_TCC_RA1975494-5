@@ -85,6 +85,7 @@ class AddressTabFormWidget extends StatelessWidget {
               label: "CEP",
               hintText: '00000-000',
               type: TextInputType.number,
+              textInputAction: TextInputAction.next,
               controller: controller.cepController,
               suffixIcon: IconButton(
                 icon: Icon(Icons.search_rounded,
@@ -106,6 +107,8 @@ class AddressTabFormWidget extends StatelessWidget {
                 child: TextFieldWidget(
                     label: "Cidade",
                     type: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    textCapitalization: TextCapitalization.words,
                     controller: controller.cityController,
                     validator: (String value) => value.isEmpty
                         ? 'Informe uma cidade válida' : null),
@@ -116,6 +119,8 @@ class AddressTabFormWidget extends StatelessWidget {
                 child: TextFieldWidget(
                     label: "UF",
                     type: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    textCapitalization: TextCapitalization.characters,
                     controller: controller.provinceController,
                     validator: (String value) => value.isEmpty
                         ? 'UF inválido' : null),
@@ -129,6 +134,8 @@ class AddressTabFormWidget extends StatelessWidget {
                 child: TextFieldWidget(
                     label: "Rua",
                     type: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    textCapitalization: TextCapitalization.words,
                     controller: controller.streetController,
                     validator: (String value) => value.isEmpty
                         ? 'Informe uma rua válida' : null),
@@ -138,7 +145,8 @@ class AddressTabFormWidget extends StatelessWidget {
                 flex: 2,
                 child: TextFieldWidget(
                     label: "Número",
-                    type: TextInputType.text,
+                    type: TextInputType.number,
+                    textInputAction: TextInputAction.next,
                     controller: controller.numberController,
                     validator: (String value) => value.isEmpty
                         ? 'Inválido' : null),
@@ -148,12 +156,16 @@ class AddressTabFormWidget extends StatelessWidget {
           TextFieldWidget(
               label: "Bairro",
               type: TextInputType.text,
+              textInputAction: TextInputAction.next,
+              textCapitalization: TextCapitalization.words,
               controller: controller.districtController,
               validator: (String value) => value.isEmpty
                   ? 'Informe um bairro válido' : null),
           TextFieldWidget(
               label: "Complemento",
               type: TextInputType.text,
+              textInputAction: TextInputAction.done,
+              textCapitalization: TextCapitalization.words,
               controller: controller.complementController,
               validator: (String value) => null),
         ],

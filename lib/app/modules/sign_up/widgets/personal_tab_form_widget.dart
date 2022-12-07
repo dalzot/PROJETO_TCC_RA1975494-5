@@ -50,6 +50,7 @@ class PersonalFormTabWidget extends StatelessWidget {
           TextFieldWidget(
               label: "CPF",
               hintText: '000.000.000-00',
+              textInputAction: TextInputAction.next,
               type: const TextInputType.numberWithOptions(),
               controller: controller.cpfController,
               icon: const Icon(Icons.badge),
@@ -67,6 +68,7 @@ class PersonalFormTabWidget extends StatelessWidget {
                 child: TextFieldWidget(
                     label: "RG",
                     hintText: '0.000.000 (-00)',
+                    textInputAction: TextInputAction.next,
                     type: const TextInputType.numberWithOptions(),
                     controller: controller.rgController,
                     icon: const Icon(Icons.badge),
@@ -84,6 +86,7 @@ class PersonalFormTabWidget extends StatelessWidget {
                     label: "SSP/**",
                     hintText: 'SSP/**',
                     type: TextInputType.text,
+                    textInputAction: TextInputAction.next,
                     controller: controller.rgEmitController,
                     textCapitalization: TextCapitalization.characters,
                     inputFormatter: [
@@ -99,6 +102,7 @@ class PersonalFormTabWidget extends StatelessWidget {
               label: "Data de Nascimento",
               hintText: '01/01/1990',
               type: TextInputType.number,
+              textInputAction: TextInputAction.next,
               controller: controller.birthdayController,
               icon: const Icon(Icons.today_rounded),
               inputFormatter: [
@@ -112,23 +116,24 @@ class PersonalFormTabWidget extends StatelessWidget {
               hintText: '(49) 9 1234-5678',
               type: TextInputType.number,
               controller: controller.phoneController,
+              textInputAction: TextInputAction.next,
               icon: const Icon(Icons.local_phone_rounded),
               inputFormatter: [
                 maskFormatterPhone,
               ],
               validator: (String value) => value.length != 16
                   ? 'Informe um número válido' : null),
-          Obx(() => TextFieldWidget(
-                label: "Número Opcional",
-                hintText: '(49) 9 1234-5678',
-                type: TextInputType.number,
-                controller: controller.phone2Controller,
-                icon: const Icon(Icons.local_phone_rounded),
-                inputFormatter: [
-                  maskFormatterPhone,
-                ],
-                validator: (String value) => null),
-          ),
+          TextFieldWidget(
+              label: "Número Opcional",
+              hintText: '(49) 9 1234-5678',
+              type: TextInputType.number,
+              textInputAction: TextInputAction.done,
+              controller: controller.phone2Controller,
+              icon: const Icon(Icons.local_phone_rounded),
+              inputFormatter: [
+                maskFormatterPhone,
+              ],
+              validator: (String value) => null),
           InkWell(
             onTap: () => globalAlertDialog(
                 title: 'Por que coletamos essas informações?',
