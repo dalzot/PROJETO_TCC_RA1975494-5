@@ -12,6 +12,7 @@ import '../../../core/mixin/loader_content.dart';
 import '../../../core/theme/app_color.dart';
 import '../../global/constants/styles_const.dart';
 import '../../global/widgets/body/custom_scaffold.dart';
+import '../../global/widgets/small/custom_containers_widget.dart';
 import '../profile/widgets/professional_card_widget.dart';
 import 'controller/home_controller.dart';
 import 'controller/home_professional_controller.dart';
@@ -55,24 +56,23 @@ class HomeProfessionalPage extends GetView<HomeProfessionalController> {
                 },
                 textButton: 'Buscar',
                 iconButton: Icons.search_rounded,
-                child: Obx(() => HomeFiltersWidget(
-                      setTypeFilter: controller.setTypeFilter,
-                      typeFilter: controller.typeFilter.value,
-                      searchByCepController: controller.searchByCepController,
-                      cepError: controller.cepError,
-                      searchByCep: controller.searchByCep,
-                      cepValidator: controller.cepValidator,
-                      searchCityController: controller.searchCityController,
-                      searchProvinceController: controller.searchProvinceController,
-                      searchStreetController: controller.searchStreetController,
-                      searchDistrictController: controller.searchDistrictController,
-                      addProfessionalExpertises: controller.addServiceExpertises,
-                      removeProfessionalExpertises: controller.removeServiceExpertises,
-                      expertisesFilter: controller.expertisesFilter,
-                      addPaymentsMethods: controller.addPaymentsMethods,
-                      removePaymentsMethods: controller.removePaymentsMethods,
-                      paymentsFilter: controller.paymentsFilter),
-                ),
+                child: HomeFiltersWidget(
+//                      setTypeFilter: controller.setTypeFilter,
+//                      typeFilter: controller.typeFilter.value,
+                    searchByCepController: controller.searchByCepController,
+                    cepError: controller.cepError,
+                    searchByCep: controller.searchByCep,
+                    cepValidator: controller.cepValidator,
+                    searchCityController: controller.searchCityController,
+                    searchProvinceController: controller.searchProvinceController,
+                    searchStreetController: controller.searchStreetController,
+                    searchDistrictController: controller.searchDistrictController,
+                    addProfessionalExpertises: controller.addServiceExpertises,
+                    removeProfessionalExpertises: controller.removeServiceExpertises,
+                    expertisesFilter: controller.expertisesFilter,
+                    addPaymentsMethods: controller.addPaymentsMethods,
+                    removePaymentsMethods: controller.removePaymentsMethods,
+                    paymentsFilter: controller.paymentsFilter),
                 expandedBody: true,
                 showClose: true,
                 clearFilters: controller.filteringEnabled.value ? () {
@@ -88,24 +88,8 @@ class HomeProfessionalPage extends GetView<HomeProfessionalController> {
         children: [
           Obx(() => Visibility(
             visible: controller.closeBannerMessage.isTrue && controller.filteringEnabled.isFalse,
-              child: Container(
-                color: appLightGreyColor.withOpacity(0.5),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Lista de serviços na sua região',
-                          style: appStyle.bodyMedium?.copyWith(
-                              color: appNormalGreyColor.withOpacity(0.75))),
-                      IconButton(
-                          onPressed: () => controller.setCloseBannerMessage(),
-                          icon: Icon(Icons.close_rounded,
-                            color: appNormalGreyColor.withOpacity(0.75)))
-                    ],
-                  ),
-                ),
-              ),
+              child: BannerText('Use os filtros para pesquisar por serviços',
+                  onClose: () => controller.setCloseBannerMessage()),
           )),
           ListServicesFiltereds()
         ],
@@ -115,16 +99,18 @@ class HomeProfessionalPage extends GetView<HomeProfessionalController> {
 
   Widget ListServicesFiltereds() {
     return Obx(() => Expanded(
-        child:controller.filteredServices.isEmpty && controller.filterEnabled.value
-            ? const EmptyListWidget(message: 'Nenhum serviço encontrado,\ntente alterar os filtros')
-            : controller.filteredServices.isEmpty
-            ? const EmptyListWidget(message: 'Não encontramos nenhum\nserviço em sua região',)
-            : controller.loading.value
-            ? LoadingContent() : GlobalListViewBuilderWidget(
-          itemCount: controller.filteredServices.length,
-          itemBuilder: (context, i) => AnnounceRequestCardWidget(service: controller.filteredServices[i]),
+      child: Visibility(
+        visible: controller.loading.isTrue,
+        replacement: Visibility(
+          visible: controller.filteredServices.isEmpty && controller.filterEnabled.value,
+          replacement: GlobalListViewBuilderWidget(
+            itemCount: controller.filteredServices.length,
+            itemBuilder: (context, i) => AnnounceRequestCardWidget(service: controller.filteredServices[i]),
+          ),
+          child: const EmptyListWidget(message: 'Nenhum serviço encontrado,\ntente alterar os filtros'),
         ),
+        child: LoadingContent(),
       ),
-    );
+    ));
   }
 }

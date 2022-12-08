@@ -77,10 +77,10 @@ class MyServiceCardWidget extends GetView<ServiceController> {
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       shrinkWrap: true,
-                      itemCount: service.serviceExpertise!.length,
+                      itemCount: service.serviceExpertise.length,
                       itemBuilder: (context, i) => Padding(
-                        padding: EdgeInsets.only(right: i < service.serviceExpertise!.length-1 ? 4 : 0),
-                        child: SkillContainer(service.serviceExpertise![i]),
+                        padding: EdgeInsets.only(right: i < service.serviceExpertise.length-1 ? 4 : 0),
+                        child: SkillContainer(service.serviceExpertise[i]),
                       ),
                     ),
                   ),
@@ -109,7 +109,7 @@ class MyServiceCardWidget extends GetView<ServiceController> {
                         children: [
 //                          Row(
 //                            children: [
-//                              Text(myServiceProposal!.dateCreated.toString().replaceAll(' ', ' às '),
+//                              Text(service.dateUpdated.toString().replaceAll(' ', '\nàs '),
 //                                style: appStyle.bodyMedium,
 //                                textAlign: TextAlign.end),
 //                            ],
@@ -117,9 +117,17 @@ class MyServiceCardWidget extends GetView<ServiceController> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              GetIconByStatus(myServiceProposal!.status.toString(), size: 24),
+                              if(service.status == 'finalizado') ...[
+                                Text(service.dateUpdated.toString().replaceAll(' ', '\nàs '),
+                                    style: appStyle.bodyMedium,
+                                    textAlign: TextAlign.end),
+                                const SizedBox(width: 8),
+                              ],
+                              GetIconByStatus(service.status != 'disponível' ? service.status :
+                                  myServiceProposal!.status.toString(), size: 24),
                               const SizedBox(width: 4,),
-                              Text(myServiceProposal!.status.toString(),
+                              Text((service.status != 'disponível'
+                                  ? service.status : myServiceProposal!.status).toString(),
                                   style: appStyle.bodySmall, textAlign: TextAlign.end),
                             ],
                           ),

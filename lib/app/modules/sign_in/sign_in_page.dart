@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../../../core/mixin/loader_content.dart';
 import '../../../routes/app_pages.dart';
 import '../../global/constants/constants.dart';
 import '../../global/constants/styles_const.dart';
@@ -44,7 +45,11 @@ class SignInPage extends GetView<SignInController> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
                         GenerateFormFieldsSignInWidget(controller: controller),
-                        GenerateFormButtonsSignInWidget(controller: controller),
+                        Obx(() => controller.loading.isTrue ? Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: LoadingContent(),
+                        ) :
+                        GenerateFormButtonsSignInWidget(controller: controller)),
                         GenerateFormSignUp(),
                       ],
                     ),

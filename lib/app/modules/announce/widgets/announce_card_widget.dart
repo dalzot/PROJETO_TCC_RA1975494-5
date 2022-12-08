@@ -11,21 +11,27 @@ import 'package:get/get.dart';
 
 import '../../../../core/theme/app_color.dart';
 import '../../../../routes/app_pages.dart';
-import '../../../global/constants/constants.dart';
 import '../../../global/constants/styles_const.dart';
+import '../model/proposal_model.dart';
 
 class AnnounceRequestCardWidget extends StatelessWidget {
   final ServiceModel service;
   final String? fromRoute;
   final RequestController? controller;
-  const AnnounceRequestCardWidget({
+  AnnounceRequestCardWidget({
     required this.service,
     this.fromRoute,
     this.controller,
     Key? key}) : super(key: key);
 
+  ProposalModel? myServiceProposal;
   @override
   Widget build(BuildContext context) {
+    if(myServiceProposal == null && service.proposals.isNotEmpty
+        && controller != null && checkUserType(controller!.userLogged.profileType)) {
+      myServiceProposal = service.proposals.firstWhere(
+              (e) => e.professionalId == controller!.userLogged.firebaseId);
+    }
     return CustomInkWell(
       borderRadius: BorderRadius.zero,
       backgroundColor: appExtraLightGreyColor,
@@ -37,6 +43,7 @@ class AnnounceRequestCardWidget extends StatelessWidget {
         }
         Get.to(()=>AnnounceDetailsPage(
           service: service,
+          myServiceProposal: myServiceProposal,
           fromRoute: fromRoute,
           onDeleteRequest: controller != null ? () async {
             Get.back();
@@ -147,16 +154,16 @@ class AnnounceRequestCardWidget extends StatelessWidget {
   }
 
   Color getColorByStatus(status) {
-    return service.status == 'disponível' ? appLightPrimaryColor // Disponível
-        : service.status == 'finalizado' ? colorSuccess // Finalizada
-        : service.status == 'avaliar' ? colorSuccess // Não avaliado
+    return status == 'disponível' ? appLightPrimaryColor // Disponível
+        : status == 'finalizado' ? colorSuccess // Finalizada
+        : status == 'avaliar' ? appNormalGreyColor // Não avaliado
         : colorWarning; // Executando
   }
 
   IconData getIconByStatus(status) {
-    return service.status == 'disponível' ? Icons.stream // Disponível
-        : service.status == 'finalizado' ? Icons.done_all_outlined // Finalizada
-        : service.status == 'avaliar' ? Icons.star_outline_rounded // Não avaliado
+    return status == 'disponível' ? Icons.stream // Disponível
+        : status == 'finalizado' ? Icons.done_all_outlined // Finalizada
+        : status == 'avaliar' ? Icons.star_outline_rounded // Não avaliado
         : Icons.wifi_protected_setup_rounded; // Executando
   }
 }

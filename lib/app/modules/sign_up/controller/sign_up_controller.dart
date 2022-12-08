@@ -11,6 +11,7 @@ import 'package:search_cep/search_cep.dart';
 import '../../../../core/mixin/loader_mixin.dart';
 import '../../../../core/services/auth_service.dart';
 import '../../../../routes/app_pages.dart';
+import '../../../global/constants/constants.dart';
 import '../../../global/constants/styles_const.dart';
 
 class SignUpController extends GetxController with LoaderMixin {
@@ -290,6 +291,8 @@ class SignUpController extends GetxController with LoaderMixin {
   // Envia os dados para o firebase
   submitDataToFirebase() async {
     loading.value = false;
+    loading.value = true;
+    final p = await prefs();
     String? firebaseMessaging = await FirebaseService.getFirebaseMessagingToken();
     ProfileModel profileData = ProfileModel(
       firebaseId: _authService!.auth.currentUser!.uid,
@@ -333,12 +336,13 @@ class SignUpController extends GetxController with LoaderMixin {
       dateLastView: dateNowString(),
       firebaseMessagingId: firebaseMessaging.toString(),
     );
-    loading.value = true;
+    p.setString(userLoginMail, profileData.email);
 
     await _authService!.setUserByFirebaseData(profileData);
 
     loading.value = false;
-    setNextSignUpStep();
+    clearTextFields();
+    signUpStep.value = 5;
   }
 
   deleteAccount() async {
@@ -381,7 +385,7 @@ class SignUpController extends GetxController with LoaderMixin {
     biographyController.clear();
     otherPaymentsController.clear();
     profileType.value = '';
-    signUpStep.value = 0;
+//    signUpStep.value = 0;
   }
 
   setTextFieldsTemp(ProfileModel profile) async {

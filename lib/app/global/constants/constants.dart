@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 const appName = 'HeyJobs';
 const appPackageName = 'com.zotinfo.heyjobs';
+const appUrlPlayStore = 'https://play.google.com/store/apps/details?id=com.zotinfo.heyjobs';
 const appIcon = 'assets/app_icon.png';
 const googleMapsAPI = 'AIzaSyDjJgI5YaM2nQ7vpodqYkDwCzXPJAjONls';
 
@@ -35,6 +36,7 @@ const collectionChat = 'chats';
 
 // String keys
 const keyMessageFilterCep = 'keyMessageFilterCep';
+const userLoginMail = 'userLoginMail';
 
 // Lists
 List<String> allStatusOptions = ['online', 'ocupado', 'offline'];

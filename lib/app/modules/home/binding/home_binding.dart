@@ -9,8 +9,8 @@ class HomeBinding implements Bindings {
   void dependencies() {
     Get.put<HomeController>(HomeController(), permanent: true);
 
-    Get.put<HomeClientController>(HomeClientController(), permanent: true);
+    Get.lazyPut<HomeClientController>(() => HomeClientController());
 
-    Get.put<HomeProfessionalController>(HomeProfessionalController(), permanent: true);
+    Get.lazyPut<HomeProfessionalController>(() => HomeProfessionalController());
   }
 }

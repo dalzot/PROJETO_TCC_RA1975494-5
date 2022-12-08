@@ -16,6 +16,7 @@ class ServiceModel {
       street,
       number,
       observations,
+      observationsFinal,
       clientName,
       phone1,
       phone2,
@@ -46,6 +47,7 @@ class ServiceModel {
     this.street = '',
     this.number = '',
     this.observations = '',
+    this.observationsFinal = '',
     this.clientName = '',
     this.phone1 = '',
     this.phone2 = '',
@@ -76,6 +78,7 @@ class ServiceModel {
     street: json['street'],
     number: json['number'],
     observations: json['observations'],
+    observationsFinal: json['observationsFinal'] ?? '',
     clientName: json['clientName'],
     phone1: getMaskedPhoneNumber(json['phone1']),
     phone2: getMaskedPhoneNumber(json['phone2']),
@@ -114,6 +117,7 @@ class ServiceModel {
     'street': street,
     'number': number,
     'observations': observations,
+    'observationsFinal': observationsFinal,
     'clientName': clientName,
     'phone1': phone1,
     'phone2': phone2,
@@ -133,6 +137,20 @@ class ServiceModel {
 
   Map<String, dynamic> toProposal() => {
     'proposals': ProposalModel.toList(proposals),
+    'status': status,
+  };
+
+  Map<String, dynamic> toProposalAccept() => {
+    'proposals': ProposalModel.toList(proposals),
+    'professionalId': professionalId,
+    'dateUpdated': dateUpdated,
+    'status': status,
+  };
+
+  Map<String, dynamic> toFinalize() => {
+    'status': status,
+    'dateUpdated': dateUpdated,
+    'observationsFinal': observationsFinal,
   };
 
   @override

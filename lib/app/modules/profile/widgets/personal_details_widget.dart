@@ -1,6 +1,7 @@
 import 'package:delivery_servicos/app/global/constants/constants.dart';
 import 'package:delivery_servicos/app/modules/profile/controller/profile_controller.dart';
 import 'package:delivery_servicos/core/theme/app_color.dart';
+import 'package:delivery_servicos/core/util/global_functions.dart';
 import 'package:delivery_servicos/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -130,7 +131,9 @@ class PersonalDetailsWidget extends GetView<ProfileController> {
               Positioned(
                 left: defaultPadding16,
                 bottom: 2,
-                child: RateContainer(controller.profileModel.rate)),
+                child: Visibility(
+                  visible: checkUserType(controller.profileModel.profileType),
+                  child: RateContainer(controller.profileModel.rate))),
               Positioned(
                 right: defaultPadding16,
                 bottom: 2,

@@ -19,7 +19,6 @@ class HomeProfessionalController extends GetxController {
   RxBool loading = false.obs;
 
   RxList<ServiceModel> filteredServices = <ServiceModel>[].obs;
-  RxList<ServiceModel> filteredServicesCache = <ServiceModel>[].obs;
   RxBool filterEnabled = false.obs;
   RxBool filteringEnabled = false.obs;
 
@@ -41,6 +40,7 @@ class HomeProfessionalController extends GetxController {
 
   @override
   void onInit() {
+    loading.value = true;
     loadInitValues();
     super.onInit();
   }
@@ -48,8 +48,23 @@ class HomeProfessionalController extends GetxController {
   @override
   void onReady() {
     userLogged = authServices.userLogged;
-    getServicesByCep(userLogged.addressCEP);
+    getServicesByFilters();
+    //getServicesByCep(userLogged.addressCEP);
+    loading.value = false;
     super.onReady();
+  }
+
+  @override
+  void onClose() {
+    searchByCepController.clear();
+    searchDistrictController.clear();
+    searchComplementController.clear();
+    searchProvinceController.clear();
+    searchCityController.clear();
+    searchStreetController.clear();
+    searchNumberController.clear();
+    loading.value = false;
+    super.onClose();
   }
 
   loadInitValues() {
@@ -133,7 +148,6 @@ class HomeProfessionalController extends GetxController {
   }
 
   getServicesByCep(String cep) async {
-    loading.value = false;
     loading.value = true;
 
     QuerySnapshot queryResult = await firestore.collection(collectionServices)
@@ -146,9 +160,8 @@ class HomeProfessionalController extends GetxController {
   }
 
   getServicesByFilters() async {
-    loading.value = false;
-    filterEnabled.value = true;
     loading.value = true;
+    filterEnabled.value = true;
 
     Query querys = firestore.collection(collectionServices);
     if(expertisesFilter.isNotEmpty) {
@@ -186,7 +199,7 @@ class HomeProfessionalController extends GetxController {
   List<QueryDocumentSnapshot> filterServices(QuerySnapshot results) {
     List<QueryDocumentSnapshot> listFiltered = results.docs
         .where((e) {
-      var firstListSet = ServiceModel.fromJson(e.data() as Map<String, dynamic>).servicePayment!.toSet();
+      var firstListSet = ServiceModel.fromJson(e.data() as Map<String, dynamic>).servicePayment.toSet();
       var secondListSet = paymentsFilter.toSet();
       return firstListSet.intersection(secondListSet).isNotEmpty;
     }).toList();
@@ -197,7 +210,6 @@ class HomeProfessionalController extends GetxController {
     try {
       filteredServices.value = results
           .map((e) => ServiceModel.fromJson(e.data() as Map<String, dynamic>)).toList();
-      filteredServicesCache = filteredServices;
     } catch(e,st) {
       printException('handleFilterServices', e, st);
     }
@@ -217,7 +229,7 @@ class HomeProfessionalController extends GetxController {
     searchNumberController.text = '';
     paymentsFilter.value = [];
     expertisesFilter.value = [];
-    filteredServices = filteredServicesCache;
+    //filteredServices = filteredServicesCache;
   }
 
   setCloseBannerMessage() async {

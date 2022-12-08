@@ -121,7 +121,7 @@ class PersonalFormTabWidget extends StatelessWidget {
               inputFormatter: [
                 maskFormatterPhone,
               ],
-              validator: (String value) => value.length != 16
+              validator: (String value) => value.length < 14
                   ? 'Informe um número válido' : null),
           TextFieldWidget(
               label: "Número Opcional",

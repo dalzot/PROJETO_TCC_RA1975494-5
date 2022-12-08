@@ -262,7 +262,8 @@ Widget CallButtonsProfile(ProfileModel profile, context) {
           phoneNumber: profile.phoneNumber,
           phoneNumber2: profile.phoneNumber2)),
       const SizedBox(width: defaultPadding16),
-      Expanded(child: LongButton('Compartilhar', ContactButtonType.share, context)),
+      Expanded(child: LongButton('Compartilhar', ContactButtonType.share, context,
+          profileParam: profile)),
     ],
   );
 }

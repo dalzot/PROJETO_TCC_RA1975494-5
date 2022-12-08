@@ -343,7 +343,7 @@ logout() async {
 //  ProfileController().dispose();
 }
 
-Future globalFunctionOpenChat({ProfileModel? profileParam, String? profileId}) async {
+Future globalFunctionOpenChat({ProfileModel? profileParam, String? profileId, String? chatId}) async {
   ProfileModel? profile;
   if(profileParam == null && profileId != null && profileId.isNotEmpty) {
     profile = await FirebaseService.getProfileModelData(profileId);
@@ -353,7 +353,7 @@ Future globalFunctionOpenChat({ProfileModel? profileParam, String? profileId}) a
   if(profile != null) {
     Get.lazyPut(()=>ChatController());
     ChatController chatController = Get.find<ChatController>();
-    chatController.setSelectedChatProfile(profile);
+    chatController.setSelectedChatProfile(profile, chatId);
     Get.to(() => ChatDetailsPage(profile: profile!));
   } else {
     snackBar('Não foi possível encontrar o usuário');

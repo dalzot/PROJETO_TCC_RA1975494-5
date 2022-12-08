@@ -15,8 +15,6 @@ class RequestController extends GetxController with LoaderMixin {
 
   AuthServices authServices = Get.find<AuthServices>();
 
-
-
   RxBool isTermsAccepted = false.obs;
   RxBool isValidatedForm = false.obs;
   RxBool isValidatedPayments = false.obs;
@@ -128,6 +126,8 @@ class RequestController extends GetxController with LoaderMixin {
   loadMyRequests() async {
     List<ServiceModel> listFromFirebase = await FirebaseService
         .getListServiceModelDataById('clientId', userLogged.firebaseId);
+
+    listFromFirebase.sort((a,b) => ('${a.status} ${a.dateUpdated}').compareTo('${b.status} ${b.dateUpdated}'));
     myRequestsList.value = listFromFirebase;
   }
 

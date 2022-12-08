@@ -55,7 +55,7 @@ class MyRequestsPage extends GetView<RequestController> {
                       ),
                       Row(
                         children: const [
-                          Icon(Icons.star_outline_rounded, color: colorPrata),
+                          Icon(Icons.star_outline_rounded, color: appNormalGreyColor),
                           SizedBox(width: 12, height: 32),
                           Text('Não Avaliado'),
                         ],

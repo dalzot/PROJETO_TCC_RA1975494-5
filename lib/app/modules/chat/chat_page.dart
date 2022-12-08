@@ -29,7 +29,9 @@ class ChatPage extends GetView<ChatController> {
                 shrinkWrap: true,
                 itemCount: controller.allChats.length,
                 itemBuilder: (context, i) {
-                  return ChatMessageWidget(context, controller.allChats[i]);
+                  return controller.userLogged.firebaseId == controller.allChats[i].ownerProfileId
+                      ? ChatMessageWidget(context, controller.allChats[i])
+                      : ChatMessageWidgetToOwner(context, controller.allChats[i]);
                 }),
               )
         ],
@@ -41,60 +43,66 @@ class ChatPage extends GetView<ChatController> {
     return CustomInkWell(
       backgroundColor: Colors.transparent,
       onTap: () async {
-        await globalFunctionOpenChat(profileId: chat.toProfileId);
+        await globalFunctionOpenChat(profileId: chat.toProfileId, chatId: chat.chatId);
       },
-      child: Card(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(64),
-            side: BorderSide(width: 2, color: appLightGreyColor.withOpacity(0.5))
-        ),
-        elevation: 0,
-        child: Padding(
-          padding: const EdgeInsets.all(2.0),
-          child: Row(
-            children: [
-              Container(
-                height: 64,
-                width: 64,
-                decoration: BoxDecoration(
-                    image: chat.toImage.isEmpty ? null : DecorationImage(
-                        image: Image.memory(Uint8List.fromList(chat.toImage)).image,
-                        fit: BoxFit.cover
-                    ),
-                    borderRadius: BorderRadius.all(defaultCircularRadius64),
-                    color: appExtraLightGreyColor.withOpacity(0.5)
-                ),
-                child: Visibility(
-                  visible: chat.toImage.isEmpty,
-                  child: Icon(Icons.image_not_supported, color: appLightGreyColor,),
-                ),
+      child: ProfileChatWidget(chat.toName, chat.toImage),
+    );
+  }
+
+  Widget ChatMessageWidgetToOwner(context, ChatModel chat) {
+    return CustomInkWell(
+      backgroundColor: Colors.transparent,
+      onTap: () async {
+        await globalFunctionOpenChat(profileId: chat.ownerProfileId, chatId: chat.chatId);
+      },
+      child: ProfileChatWidget(chat.ownerName, chat.ownerImage),
+    );
+  }
+
+  Widget ProfileChatWidget(name, image) {
+    return Card(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(64),
+          side: BorderSide(width: 2, color: appLightGreyColor.withOpacity(0.5))
+      ),
+      elevation: 0,
+      child: Padding(
+        padding: const EdgeInsets.all(2.0),
+        child: Row(
+          children: [
+            Container(
+              height: 64,
+              width: 64,
+              decoration: BoxDecoration(
+                  image: image.isEmpty ? null : DecorationImage(
+                      image: Image.memory(Uint8List.fromList(image)).image,
+                      fit: BoxFit.cover
+                  ),
+                  borderRadius: BorderRadius.all(defaultCircularRadius64),
+                  color: appExtraLightGreyColor.withOpacity(0.5)
               ),
-              const SizedBox(width: 8,),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(chat.toName,
-                        style: appStyle.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.bold),
-                        softWrap: true,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2),
-//                    const SizedBox(height: 4,),
-//                    Text(getMaskedPhoneNumber(profile.phoneNumber),
-//                        style: appStyle.bodySmall?.copyWith(
-//                            fontWeight: FontWeight.w500,
-//                            color: appNormalGreyColor),
-//                        softWrap: true,
-//                        overflow: TextOverflow.ellipsis,
-//                        maxLines: 1),
-                  ],
-                ),
+              child: Visibility(
+                visible: image.isEmpty,
+                child: Icon(Icons.image_not_supported, color: appLightGreyColor,),
               ),
-              const Icon(Icons.arrow_forward_ios_rounded, color: appLightGreyColor),
-              const SizedBox(width: 12),
-            ],
-          ),
+            ),
+            const SizedBox(width: 8,),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(name,
+                      style: appStyle.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.bold),
+                      softWrap: true,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2),
+                ],
+              ),
+            ),
+            const Icon(Icons.arrow_forward_ios_rounded, color: appLightGreyColor),
+            const SizedBox(width: 12),
+          ],
         ),
       ),
     );

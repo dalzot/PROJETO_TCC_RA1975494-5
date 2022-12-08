@@ -14,7 +14,7 @@ import 'package:get/get.dart';
 class ServiceController extends GetxController with LoaderMixin {
   final ServiceModel? service;
   ServiceController({this.service});
-  RxBool loadingMyServices = false.obs;
+  RxBool loading = false.obs;
 
   AuthServices authServices = Get.find<AuthServices>();
 
@@ -25,23 +25,25 @@ class ServiceController extends GetxController with LoaderMixin {
 
   @override
   void onInit() {
-    print('onInit - Get.put(()=>ServiceController');
+    loading.value = true;
 
     userLogged = authServices.userLogged;
-
-    print('Get.currentRoute: ${Get.currentRoute}');
     super.onInit();
   }
 
   @override
   void onReady() {
-    loadingMyServices.value = true;
     userLogged = authServices.userLogged;
-
     loadMyServices();
 
-    loadingMyServices.value = false;
+    loading.value = false;
     super.onReady();
+  }
+
+  @override
+  void onClose() {
+    loading.value = false;
+    super.onClose();
   }
 
   resetMyProposal() {
@@ -49,8 +51,8 @@ class ServiceController extends GetxController with LoaderMixin {
   }
   reloadMyProposal() {
     resetMyProposal();
-    if(service != null && service!.proposals!.isNotEmpty) {
-      for(ProposalModel p in service!.proposals!) {
+    if(service != null && service!.proposals.isNotEmpty) {
+      for(ProposalModel p in service!.proposals) {
         if(p.professionalId == userLogged.firebaseId && !checkMyProposal()) {
           myProposal = p.obs;
         }
@@ -61,42 +63,39 @@ class ServiceController extends GetxController with LoaderMixin {
   }
 
   loadMyServices() async {
-    List<ServiceModel> listFromFirebase = await FirebaseService
-        .getListServiceModelDataById('professionalId', userLogged.firebaseId);
+    List<ServiceModel> listFromFirebase = [];
 
     for(String s in userLogged.serviceProposals) {
       QuerySnapshot queryServices = await FirebaseService.firestore
           .collection(collectionServices).where('serviceId', isEqualTo: s).get();
 
       if(queryServices.docs.isNotEmpty) {
-        for(DocumentSnapshot d in queryServices.docs) {
-          listFromFirebase.add(ServiceModel.fromJson(d.data() as Map<String, dynamic>));
-        }
+        listFromFirebase.add(ServiceModel.fromJson(queryServices.docs.first.data() as Map<String, dynamic>));
       }
     }
-
+    listFromFirebase.sort((a,b) => a.dateUpdated.compareTo(b.dateUpdated));
     myServicesProposal.value = listFromFirebase;
   }
   removeMyProposal(ServiceModel service) async {
-    loadingMyServices.value = false;
-    loadingMyServices.value = true;
+    loading.value = true;
 
     ServiceModel serviceModel = await FirebaseService.getServiceModelData(service.serviceId);
-    serviceModel.proposals!.removeWhere((p) => p.professionalId == userLogged.firebaseId);
+    serviceModel.proposals.removeWhere((p) => p.professionalId == userLogged.firebaseId);
 
     await FirebaseService.updateServiceData(serviceModel.serviceId, serviceModel.toProposal())
         .then((value) async {
-      userLogged.serviceProposals.removeWhere((s) => s == serviceModel.serviceId!);
+      userLogged.serviceProposals.removeWhere((s) => s == serviceModel.serviceId);
       authServices.userLogged = userLogged;
 
       await FirebaseService.updateProfileData(userLogged.firebaseId, userLogged.toProposals());
       resetMyProposal();
       if(this.service != null) {
-        this.service!.proposals!.removeWhere((p) => p.professionalId == userLogged.firebaseId);
+        this.service!.proposals.removeWhere((p) => p.professionalId == userLogged.firebaseId);
       }
       reloadMyProposal();
     });
-    loadingMyServices.value = false;
+
+    loading.value = false;
     Get.toNamed(Routes.myServices);
     snackBar('Proposta removida com sucesso');
   }

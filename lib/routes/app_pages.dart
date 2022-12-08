@@ -1,3 +1,5 @@
+import '../app/modules/about/about_page.dart';
+import '../app/modules/about/binding/about_binding.dart';
 import './routes.dart';
 part './app_routes.dart';
 
@@ -100,11 +102,11 @@ class AppPages {
       binding: SavedsBinding(),
     ),
 
-    /// General Pages
+    /// About Pages
     GetPage(
-      name: Routes.settings,
-      page: () => const SettingsPage(),
-      binding: SettingsBinding()
+      name: Routes.about,
+      page: () => const AboutPage(),
+      binding: AboutBinding()
     ),
   ];
 }

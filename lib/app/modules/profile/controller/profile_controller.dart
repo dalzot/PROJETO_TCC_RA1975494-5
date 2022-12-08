@@ -53,11 +53,7 @@ class ProfileController extends GetxController with LoaderMixin {
   }
 
   loadProfilePage() {
-//    if(profileParam != null) {
-//      profileModel = profileParam!;
-//    } else {
       profileModel = authServices.userLogged;
-//    }
     profilesSaved.value = authServices.userLogged.profilesSaved;
     profileImage.value = profileModel.image;
     bannerImage.value = profileModel.banner;

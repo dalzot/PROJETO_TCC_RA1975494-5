@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:delivery_servicos/app/modules/profile/models/profile_saved_model.dart';
 import 'package:delivery_servicos/core/util/global_functions.dart';
 
+import 'rate_model.dart';
+
 class ProfileModel {
   String
       firebaseId,
@@ -48,6 +50,7 @@ class ProfileModel {
   List<ProfileSavedModel> profilesSaved;
   List<int> image,
       banner;
+  List<RateModel> allRates;
 
   ProfileModel({
     this.firebaseId = '',
@@ -94,6 +97,7 @@ class ProfileModel {
     this.dateLastView = '',
     this.firebaseMessagingId = '',
     this.serviceProposals = const [],
+    this.allRates = const [],
   });
 
   updateProfile(ProfileModel profile) {
@@ -120,55 +124,69 @@ class ProfileModel {
     firebaseMessagingId = profile.firebaseMessagingId;
   }
 
-  factory ProfileModel.fromJson(Map<String, dynamic> json) => ProfileModel(
-    firebaseId: json['firebaseId'],
-    image: false ? List<int>.from(json['image']) : base64Decode(json['image']),
-    banner: false ? List<int>.from(json['banner']) : base64Decode(json['banner']),
-    name: json['name'],
-    docCpf: getMaskedDocCPF(json['docCpf']),
-    docRg: getMaskedDocRG(json['docRg']),
-    docRgEmit: json['docRgEmit'],
-    dateBirthday: json['dateBirthday'],
-    phoneNumber: json['phoneNumber'],
-    phoneNumber2: json['phoneNumber2'],
-    email: json['email'],
-    otherPayments: json['otherPayments'],
-    biographyDetails: json['biographyDetails'],
-    paymentMethods: json['paymentMethods'] != null
-        ? List<String>.from(json['paymentMethods']) : [],
-    password: json['password'],
-    facebook: json['facebook'],
-    instagram: json['instagram'],
-    linkedin: json['linkedin'],
-    telegram: json['telegram'],
-    whatsapp: json['whatsapp'],
-    addressStreet: json['addressStreet'],
-    addressNumber: json['addressNumber'],
-    addressComplement: json['addressComplement'],
-    addressCity: json['addressCity'],
-    addressProvince: json['addressProvince'],
-    addressDistrict: json['addressDistrict'],
-    addressCEP: json['addressCEP'],
-    addressLatGPS: json['addressLatGPS'],
-    addressLngGPS: json['addressLngGPS'],
-    profileType: json['profileType'],
-    status: json['status'],
-    showFullName: json['showFullName'],
-    showFullAddress: json['showFullAddress'],
-    expertises: json['expertises'] != null
-        ? List<String>.from(json['expertises']) : [],
-    rate: double.parse(json['rate'].toString()),
-    totalRequests: double.parse(json['totalRequests'].toString()),
-    qtdRequests: json['qtdRequests'],
-    profilesSaved: json['profilesSaved'] != null
-        ? ProfileSavedModel.fromList(json['profilesSaved']) : [],
-    dateCreated: json['dateCreated'],
-    dateUpdated: json['dateUpdated'],
-    dateLastView: json['dateLastView'],
-    level: json['level'],
-    firebaseMessagingId: json['firebaseMessagingId'] ?? '',
-    serviceProposals: List<String>.from(json['serviceProposals'] ?? []),
-  );
+  factory ProfileModel.fromJson(Map<String, dynamic> json) {
+    List<RateModel> allRatesParsed = RateModel.fromList(json['allRates'] ?? []);
+    double calcRate = 0.0;
+    double calcTotalRate = 0.0;
+    int qtdRates = 0;
+    for(RateModel r in allRatesParsed) {
+      calcTotalRate += (r.ratePrice + r.rateProfessional + r.rateService) / 3.0;
+      qtdRates ++;
+    }
+    calcRate = qtdRates > 0 && calcTotalRate > 0.0
+        ? ((calcTotalRate / qtdRates) * 1.0) : 0.0;
+
+    return ProfileModel(
+      firebaseId: json['firebaseId'],
+      image: false ? List<int>.from(json['image']) : base64Decode(json['image']),
+      banner: false ? List<int>.from(json['banner']) : base64Decode(json['banner']),
+      name: json['name'],
+      docCpf: getMaskedDocCPF(json['docCpf']),
+      docRg: getMaskedDocRG(json['docRg']),
+      docRgEmit: json['docRgEmit'],
+      dateBirthday: json['dateBirthday'],
+      phoneNumber: json['phoneNumber'],
+      phoneNumber2: json['phoneNumber2'],
+      email: json['email'],
+      otherPayments: json['otherPayments'],
+      biographyDetails: json['biographyDetails'],
+      paymentMethods: json['paymentMethods'] != null
+          ? List<String>.from(json['paymentMethods']) : [],
+      password: json['password'],
+      facebook: json['facebook'],
+      instagram: json['instagram'],
+      linkedin: json['linkedin'],
+      telegram: json['telegram'],
+      whatsapp: json['whatsapp'],
+      addressStreet: json['addressStreet'],
+      addressNumber: json['addressNumber'],
+      addressComplement: json['addressComplement'],
+      addressCity: json['addressCity'],
+      addressProvince: json['addressProvince'],
+      addressDistrict: json['addressDistrict'],
+      addressCEP: json['addressCEP'],
+      addressLatGPS: json['addressLatGPS'],
+      addressLngGPS: json['addressLngGPS'],
+      profileType: json['profileType'],
+      status: json['status'],
+      showFullName: json['showFullName'],
+      showFullAddress: json['showFullAddress'],
+      expertises: json['expertises'] != null
+          ? List<String>.from(json['expertises']) : [],
+      rate: calcRate,
+      totalRequests: double.parse(json['totalRequests'].toString()),
+      qtdRequests: json['qtdRequests'],
+      profilesSaved: json['profilesSaved'] != null
+          ? ProfileSavedModel.fromList(json['profilesSaved']) : [],
+      dateCreated: json['dateCreated'],
+      dateUpdated: json['dateUpdated'],
+      dateLastView: json['dateLastView'],
+      level: json['level'],
+      firebaseMessagingId: json['firebaseMessagingId'] ?? '',
+      serviceProposals: List<String>.from(json['serviceProposals'] ?? []),
+      allRates: allRatesParsed,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
     "firebaseId": firebaseId,
@@ -213,7 +231,9 @@ class ProfileModel {
     "dateUpdated": dateUpdated,
     "dateLastView": dateLastView,
     "level": level,
+    "serviceProposals": serviceProposals,
     "firebaseMessagingId": firebaseMessagingId,
+    "allRates": RateModel.toList(allRates),
   };
 
   Map<String, dynamic> toEditJson() => {
@@ -242,6 +262,10 @@ class ProfileModel {
 
   Map<String, dynamic> toUpdateSaveds() => {
     "profilesSaved": ProfileSavedModel.toList(profilesSaved),
+  };
+
+  Map<String, dynamic> toUpdateRates() => {
+    "allRates": RateModel.toList(allRates),
   };
 
   Map<String, dynamic> toProfileImage() => {

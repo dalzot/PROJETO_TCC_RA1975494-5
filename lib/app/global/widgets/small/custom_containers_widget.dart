@@ -1,3 +1,4 @@
+import 'package:delivery_servicos/app/modules/announce/model/service_model.dart';
 import 'package:delivery_servicos/app/modules/chat/chat_details.dart';
 import 'package:delivery_servicos/app/modules/chat/controller/chat_controller.dart';
 import 'package:delivery_servicos/core/services/firebase_service.dart';
@@ -5,6 +6,7 @@ import 'package:delivery_servicos/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_social_button/flutter_social_button.dart';
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../../core/theme/app_color.dart';
 import '../../../../core/util/global_functions.dart';
@@ -147,7 +149,10 @@ Widget RateContainer(double rate) {
 
 
 Widget LongButton(String title, ContactButtonType buttonType, BuildContext context,
-{String phoneNumber = '', String phoneNumber2 = '', ProfileModel? profileParam, String profileId = ''}) {
+{String phoneNumber = '', String phoneNumber2 = '',
+  ProfileModel? profileParam, String profileId = '',
+  ServiceModel? serviceParam,
+}) {
   IconData iconData =
   buttonType == ContactButtonType.call ? FontAwesomeIcons.phoneAlt
       : buttonType == ContactButtonType.chat ? FontAwesomeIcons.solidComment
@@ -210,7 +215,30 @@ Widget LongButton(String title, ContactButtonType buttonType, BuildContext conte
             }
             break;
           case ContactButtonType.share:
-          // TODO: Handle this case.
+            if(profileParam != null) {
+              Share.share('Está procurando por um profissional qualificados para realizar algum serviço?\n\n'
+                  'Baixe o app *HeyJobs* e junte-se aos milhares de profissionais qualificados como o ${profileParam.name}, '
+                  'que é qualificado para ${profileParam.expertises.map((e) => "*$e*, ")}faça o download pelo link abaixo '
+                  'e contrate um profissional qualificado, ou se você está buscando por renda extra, que tal se tornar '
+                  'um profissional qualificado no *HeyJobs*?\n\n'
+                  '*TOTALMENTE GRATUITO* sem a necessidade de pagar comissões ou taxas de inscrições!\n\n'
+                  '$appUrlPlayStore');
+            } else if(serviceParam != null) {
+              Share.share('Olha só essa oportunidade de job, você está pronto para trabalhar?\n\n'
+                  'Baixe o app *HeyJobs* e confira as milhares de ofertas de serviços como essa para trabalhar em '
+                  '${serviceParam.serviceExpertise.map((e) => "*$e*, ")} que está oferecendo de '
+                  'R\$ ${serviceParam.minPrice.toString().replaceAll('.', ',')} até '
+                  'R\$ ${serviceParam.maxPrice.toString().replaceAll('.', ',')}, se você for qualificado para o job '
+                  'faça o download pelo link abaixo e torne-se um profissional qualificado no *HeyJobs*!\n\n'
+                  '*TOTALMENTE GRATUITO* sem a necessidade de pagar comissões ou taxas de inscrições!\n\n'
+                  '$appUrlPlayStore');
+            } else {
+              Share.share('Está procurando por um profissional qualificados para realizar algum serviço?\n\n'
+                  'Baixe o app *HeyJobs* e junte-se aos milhares de profissionais qualificados, '
+                  'ou se você está buscando por renda extra, que tal se tornar um profissional qualificado no *HeyJobs*?\n\n'
+                  '*TOTALMENTE GRATUITO* sem a necessidade de pagar comissões ou taxas de inscrições!\n\n'
+                  '$appUrlPlayStore');
+            }
             break;
         }
       },
@@ -242,6 +270,39 @@ Widget GetIconByStatus(String status, {double? size}) {
       icon = Icons.check_rounded;
       color = colorSuccess;
       break;
+    case 'executando':
+      icon = Icons.wifi_protected_setup_rounded;
+      color = colorWarning;
+      break;
+    case 'avaliar':
+      icon = Icons.star_outline_rounded;
+      color = colorWarning;
+      break;
+    case 'finalizado':
+      icon = Icons.done_all_outlined;
+      color = colorSuccess;
+      break;
   }
   return Icon(icon, color: color, size: size,);
+}
+
+Widget BannerText(String text, {Function()? onClose}) {
+  return Container(
+    color: appLightGreyColor.withOpacity(0.5),
+    child: Padding(
+      padding: const EdgeInsets.only(left: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(text,
+              style: appStyle.bodyMedium?.copyWith(
+                  color: appNormalGreyColor)),
+          IconButton(
+              onPressed: onClose,
+              icon: Icon(Icons.close_rounded,
+                  color: appNormalGreyColor.withOpacity(0.75)))
+        ],
+      ),
+    ),
+  );
 }

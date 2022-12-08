@@ -19,8 +19,7 @@ class GenerateFormFieldsSignInWidget extends StatelessWidget {
           label: "Email",
           type: TextInputType.emailAddress,
           controller: controller.emailController,
-          onChanged: (value) => controller.verifyUser(value ?? ""),
-          icon: Icon(Icons.mail_rounded),
+          icon: const Icon(Icons.mail_rounded),
           inputFormatter: [
             FilteringTextInputFormatter.deny(RegExp('[ ]')),
           ],
@@ -29,7 +28,7 @@ class GenerateFormFieldsSignInWidget extends StatelessWidget {
         PasswordFieldWidget(
             label: "Senha",
             type: TextInputType.text,
-            icon: Icon(Icons.lock_rounded),
+            icon: const Icon(Icons.lock_rounded),
             controller: controller.passController,
             validator: (String value) => value.isEmpty
                 ? "Digite sua senha" : null)

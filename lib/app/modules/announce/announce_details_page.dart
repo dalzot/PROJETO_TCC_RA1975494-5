@@ -50,27 +50,117 @@ class AnnounceDetailsPage extends GetView<AnnounceController> {
             icon: const Icon(Icons.delete_forever_rounded))
       ] : null,
       pageTitle: 'Solicitação de Serviço',
-      bottomBar: checkUserType(controller.userLogged.profileType)
-          ? (myServiceProposal != null ?
-      CurrentMyProposal(context, myServiceProposal!) :
+      bottomBar: service.status == 'finalizado'
+          ? Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: CustomInkWell(
+          backgroundColor: colorSuccess,
+          borderRadius: defaultBorderRadius8,
+          child: Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Icon(Icons.playlist_add_check_rounded, color: appExtraLightGreyColor,),
+                const SizedBox(width: 8),
+                Text('SERVIÇO CONCLUÍDO',
+                    softWrap: true,
+                    textAlign: TextAlign.start,
+                    style: appStyle.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: appExtraLightGreyColor)),
+              ],
+            ),
+          ),
+        ),
+      )
+          : service.status == 'avaliar'  && !checkUserType(controller.userLogged.profileType) ?
       Padding(
         padding: const EdgeInsets.all(16.0),
-        child: ActionButtonWidget(
-          title: 'ENVIAR PROPOSTA',
-          function: () {
-            openModalBottomSheet(context,
-                title: 'Enviar proposta',
-                showClose: true,
-                hideButton: true,
-                expandedBody: true,
-                child: ProposalWidget(context));
-          },
-          color: appNormalPrimaryColor,
+        child: CustomInkWell(
+          onTap: () => openModalBottomSheet(context,
+              title: 'Avaliar Serviço',
+              showClose: true,
+              hideButton: true,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Obx(() => Column(
+                      children: [
+                        RowRate('Atendimento do Profissional ', controller.rateProfessional.value,
+                                (e) => controller.changeRateProfessional(e)),
+                        const SizedBox(height: 8),
+                        RowRate('Preço cobrado ', controller.ratePrice.value,
+                                (e) => controller.changeRatePrice(e)),
+                        const SizedBox(height: 8),
+                        RowRate('Serviço prestado ', controller.rateService.value,
+                                (e) => controller.changeRateService(e)),
+                        const SizedBox(height: 32),
+                      ],
+                    ),
+                  ),
+                  Obx(() => ActionButtonWidget(
+                      title: 'ENVIAR AVALIAÇÃO',
+                      function: controller.rateProfessional.value > 0
+                      && controller.ratePrice.value > 0
+                      && controller.rateService.value > 0 ? () async {
+                        await controller.finalizeOrRateService(service, false);
+                      } : null,
+                      color: appNormalPrimaryColor,
+                    ),
+                  )
+                ],
+              )),
+          backgroundColor: colorWarning,
+          borderRadius: defaultBorderRadius8,
+          child: Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Icon(Icons.star_outline_rounded, color: appExtraLightGreyColor,),
+                const SizedBox(width: 8),
+                Text('AVALIAR SERVIÇO',
+                    softWrap: true,
+                    textAlign: TextAlign.start,
+                    style: appStyle.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: appExtraLightGreyColor)),
+              ],
+            ),
+          ),
         ),
-      )) : null,
+      ) : checkUserType(controller.userLogged.profileType) ?
+      Visibility(
+        visible: ((controller.myProposal != null
+                && controller.myProposal!.value.status != 'deletada')
+                || myServiceProposal != null),
+        replacement: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ActionButtonWidget(
+            title: 'ENVIAR PROPOSTA',
+            function: () {
+              openModalBottomSheet(context,
+                  title: 'Enviar proposta',
+                  showClose: true,
+                  hideButton: true,
+                  expandedBody: true,
+                  child: ProposalWidget(context));
+            },
+            color: appNormalPrimaryColor,
+          ),
+        ),
+        child: CurrentMyProposal(context,
+            myServiceProposal != null ? myServiceProposal!
+                : (controller.myProposal != null && controller.myProposal!.value.status != 'deletada')
+                ? controller.myProposal!.value : ProposalModel()),
+      ) : const SizedBox(),
       body: controller.checkIfMyRequest(service.clientId) ?
       CustomTabs(
-        labels: [
+        labels: const [
           'Dados da Solicitação',
           'Propostas Recebidas'
         ],
@@ -220,7 +310,9 @@ class AnnounceDetailsPage extends GetView<AnnounceController> {
               const Divider(height: 16, thickness: 1, color: appLightGreyColor),
               Row(
                 children: [
-                  if((myServiceProposal != null && myServiceProposal!.status == 'enviada')) ...[
+                  if(service.status != 'executando' &&
+                      ((controller.myProposal != null && controller.myProposal!.value.status == 'enviada')
+                      || (myServiceProposal != null && myServiceProposal!.status == 'enviada'))) ...[
                     Expanded(
                       child: CustomInkWell(
                         onTap: () => globalAlertDialog(
@@ -241,6 +333,67 @@ class AnnounceDetailsPage extends GetView<AnnounceController> {
                               const Icon(Icons.remove_circle_outline_rounded, color: appExtraLightGreyColor,),
                               const SizedBox(width: 8),
                               Text('REMOVER',
+                                  softWrap: true,
+                                  textAlign: TextAlign.start,
+                                  style: appStyle.bodySmall?.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      color: appExtraLightGreyColor)),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                  ],
+                  if(service.status == 'executando' && checkUserType(controller.userLogged.profileType)) ...[
+                    Expanded(
+                      child: CustomInkWell(
+                        onTap: () => globalAlertDialog(
+                            title: 'Finalizar serviço',
+                            text: 'Você deseja concluir o serviço?',
+                            labelActionButton: 'CONFIRMAR',
+                            colorOk: colorSuccess,
+                            onPressedAction: () async {
+                              await controller.finalizeOrRateService(service, true);
+                            }),
+                        backgroundColor: colorSuccess.withOpacity(0.75),
+                        borderRadius: defaultBorderRadius8,
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.check_circle, color: appExtraLightGreyColor,),
+                              const SizedBox(width: 8),
+                              Text('FINALIZAR',
+                                  softWrap: true,
+                                  textAlign: TextAlign.start,
+                                  style: appStyle.bodySmall?.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      color: appExtraLightGreyColor)),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                  ],
+                  if((service.status == 'finalizado' || service.status == 'avaliar')
+                      && checkUserType(controller.userLogged.profileType)) ...[
+                    Expanded(
+                      child: CustomInkWell(
+                        backgroundColor: colorSuccess.withOpacity(0.75),
+                        borderRadius: defaultBorderRadius8,
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.check_circle, color: appExtraLightGreyColor,),
+                              const SizedBox(width: 8),
+                              Text(service.status == 'finalizado' ? 'SERVIÇO FINALIZADO' : 'AGUARDANDO AVALIAÇÃO',
                                   softWrap: true,
                                   textAlign: TextAlign.start,
                                   style: appStyle.bodySmall?.copyWith(
@@ -282,6 +435,27 @@ class AnnounceDetailsPage extends GetView<AnnounceController> {
           ),
         ),
       ),
+    );
+  }
+
+  // ROW RATE
+  Widget RowRate(String label, int currentValue, Function(int e) onSelect) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label),
+        Row(
+          children: [1,2,3,4,5].map((e) =>
+            InkWell(
+              onTap: () => onSelect(e),
+              child: Icon(e > currentValue
+                  ? Icons.star_outline_rounded : Icons.star_rounded,
+                color: e > currentValue
+                    ? appNormalGreyColor : colorWarning,
+              ),
+            )).toList(),
+        ),
+      ],
     );
   }
 }

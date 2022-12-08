@@ -8,8 +8,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../../../../core/mixin/loader_mixin.dart';
 import '../../../../core/services/auth_service.dart';
 import '../../../../core/util/global_functions.dart';
+import '../../../global/constants/constants.dart';
 
-class SignInController extends GetxController with LoaderMixin {
+class SignInController extends GetxController {
   final loading = false.obs;
 
   final emailController = TextEditingController();
@@ -24,23 +25,30 @@ class SignInController extends GetxController with LoaderMixin {
 
   @override
   void onInit() {
-    loaderListener(loading);
-    loading.value = false;
+    loading.value = true;
     super.onInit();
   }
 
   @override
   void onReady() async {
     super.onReady();
-    loading.value = false;
 
-    loading.value = true;
     if (await _authService.checkVersion()) {
+      final p = await prefs();
+      emailController.text = p.getString(userLoginMail) ?? '';
       await _authService.checkIfAuthOrSignIn();
     } else {
       Get.offAll(() => const CheckVersionPage());
     }
     loading.value = false;
+  }
+
+  @override
+  void onClose() {
+    emailController.dispose();
+    passController.dispose();
+    loading.value = false;
+    super.onClose();
   }
 
   void validateForm(FormState? form) {
@@ -67,7 +75,6 @@ class SignInController extends GetxController with LoaderMixin {
 
     if(credentials != null) {
       ProfileModel? profileUser = await _authService.getUserByFirebaseData(credentials.user!.uid);
-      loading.value = false;
       clearFields();
       _authService.handleSignInAccount(profileUser);
     } else {
@@ -181,21 +188,11 @@ class SignInController extends GetxController with LoaderMixin {
     final _prefs = await prefs();
     _prefs.clear();
     await _authService.auth.signOut();
-  }
-
-  Future<void> verifyUser(String str) async {
-
+    loading.value = false;
   }
 
   clearFields() {
     emailController.clear();
     passController.clear();
-  }
-
-  @override
-  void onClose() {
-    emailController.dispose();
-    passController.dispose();
-    super.onClose();
   }
 }

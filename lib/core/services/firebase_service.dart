@@ -118,20 +118,42 @@ class FirebaseService {
   static Stream<DocumentSnapshot> getStreamChatModelData(doc) {
     return firestore.collection(collectionChat).doc(doc).snapshots();
   }
-  static Stream<QuerySnapshot> getStreamListChatModelDataById(equalTo) {
-    List<Stream<QuerySnapshot>> allQuerys = [];
+  static Stream<QuerySnapshot> getStreamListChatModelDataByIdOwner(equalTo) {
+//    List<Stream<QuerySnapshot>> allQuerys = [];
+//
+//    var checkOwnerId = firestore.collection(collectionChat)
+//        .where('ownerProfileId', isEqualTo: equalTo)
+//        .snapshots();
+//    var checkToId = firestore.collection(collectionChat)
+//        .where('toProfileId', isEqualTo: equalTo)
+//        .snapshots();
+//
+//    allQuerys.add(checkOwnerId);
+//    allQuerys.add(checkToId);
 
-    var checkOwnerId = firestore.collection(collectionChat)
+    return firestore.collection(collectionChat)
         .where('ownerProfileId', isEqualTo: equalTo)
         .snapshots();
-    var checkToId = firestore.collection(collectionChat)
+    return firestore.collection(collectionChat)
+        .where('ownerProfileId', isEqualTo: equalTo)
+        .where('toProfileId', isEqualTo: equalTo).snapshots();
+  }
+  static Stream<QuerySnapshot> getStreamListChatModelDataByIdReceiver(equalTo) {
+//    List<Stream<QuerySnapshot>> allQuerys = [];
+//
+//    var checkOwnerId = firestore.collection(collectionChat)
+//        .where('ownerProfileId', isEqualTo: equalTo)
+//        .snapshots();
+//    var checkToId = firestore.collection(collectionChat)
+//        .where('toProfileId', isEqualTo: equalTo)
+//        .snapshots();
+//
+//    allQuerys.add(checkOwnerId);
+//    allQuerys.add(checkToId);
+
+    return firestore.collection(collectionChat)
         .where('toProfileId', isEqualTo: equalTo)
         .snapshots();
-
-    allQuerys.add(checkOwnerId);
-    allQuerys.add(checkToId);
-
-    return allQuerys.first;
     return firestore.collection(collectionChat)
         .where('ownerProfileId', isEqualTo: equalTo)
         .where('toProfileId', isEqualTo: equalTo).snapshots();

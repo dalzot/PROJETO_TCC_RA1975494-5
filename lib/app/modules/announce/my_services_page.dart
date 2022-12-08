@@ -24,13 +24,17 @@ class MyServicesPage extends GetView<ServiceController> {
   }
 
   Widget ListOfMyServices() {
-    return Obx(() => controller.myServicesProposal.isEmpty
-        ? const EmptyListWidget(message: 'Não encontramos nenhum\nserviço em sua região',)
-        : controller.loadingMyServices.value
-        ? LoadingContent() : GlobalListViewBuilderWidget(
-      itemCount: controller.myServicesProposal.length,
-      itemBuilder: (context, i) => MyServiceCardWidget(service: controller.myServicesProposal[i]),
-    ),
-    );
+    return Obx(() => Visibility(
+      visible: controller.loading.isTrue,
+      replacement: Visibility(
+        visible: controller.myServicesProposal.isEmpty,
+        replacement: GlobalListViewBuilderWidget(
+          itemCount: controller.myServicesProposal.length,
+          itemBuilder: (context, i) => MyServiceCardWidget(service: controller.myServicesProposal[i]),
+        ),
+        child: const EmptyListWidget(message: 'Nenhum serviço encontrado,\ntente alterar os filtros'),
+      ),
+      child: LoadingContent(),
+    ));
   }
 }

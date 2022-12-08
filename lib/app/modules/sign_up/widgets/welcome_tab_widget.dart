@@ -44,7 +44,7 @@ class WelcomeTabWidget extends StatelessWidget {
           bottom: defaultPadding32,
           child: ActionButtonWidget(
             title: 'IR PARA TELA INICIAL',
-            function: () => Get.offAllNamed(Routes.home),
+            function: () => Get.offAllNamed(Routes.signIn),
           ),
         )
       ],

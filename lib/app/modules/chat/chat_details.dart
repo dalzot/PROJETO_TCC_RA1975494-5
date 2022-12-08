@@ -45,7 +45,11 @@ class ChatDetailsPage extends GetView<ChatController> {
                     itemCount: controller.allMessagesChat.length,
                     itemBuilder: (context, i) {
                       return ChatMessageWidget(context,
-                          controller.allMessagesChat[i], controller.allMessagesChat[i].isOwner);
+                          controller.allMessagesChat[i],
+                          (controller.allMessagesChat[i].isOwner
+                              && controller.selectedChat.ownerProfileId == controller.userLogged.firebaseId)
+                      || (!controller.allMessagesChat[i].isOwner
+                              && controller.selectedChat.toProfileId == controller.userLogged.firebaseId));
                     })
           ),
         ),

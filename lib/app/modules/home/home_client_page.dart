@@ -11,6 +11,7 @@ import '../../../core/mixin/loader_content.dart';
 import '../../../core/theme/app_color.dart';
 import '../../global/constants/styles_const.dart';
 import '../../global/widgets/body/custom_scaffold.dart';
+import '../../global/widgets/small/custom_containers_widget.dart';
 import '../profile/widgets/professional_card_widget.dart';
 import 'widgets/home_banner_slider_widget.dart';
 
@@ -113,24 +114,8 @@ class HomeClientPage extends GetView<HomeClientController> {
             )),
           Obx(() => Visibility(
             visible: controller.closeBannerMessage.isTrue && controller.filteringEnabled.isFalse,
-              child: Container(
-                color: appLightGreyColor.withOpacity(0.5),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Lista de profissionais na sua região',
-                          style: appStyle.bodyMedium?.copyWith(
-                              color: appNormalGreyColor.withOpacity(0.75))),
-                      IconButton(
-                          onPressed: () => controller.setCloseBannerMessage(),
-                          icon: Icon(Icons.close_rounded,
-                            color: appNormalGreyColor.withOpacity(0.75)))
-                    ],
-                  ),
-                ),
-              ),
+            child: BannerText('Use os filtros para pesquisar por serviços',
+                onClose: () => controller.setCloseBannerMessage()),
           )),
           ListProfessionalsFiltereds()
         ],

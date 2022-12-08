@@ -39,17 +39,19 @@ class AuthServices extends GetxService {
     }
   }
 
-  handleSignInAccount(ProfileModel? profileUser) async {
+  handleSignInAccount(ProfileModel? profileUser, {bool toHome = true}) async {
     if(profileUser != null) {
       if(profileUser.docCpf.isNotEmpty) {
-        HomeController homeController = Get.find<HomeController>();
         String? firebaseMessagingId = await FirebaseService.getFirebaseMessagingToken();
         userLogged = profileUser;
         userLogged.firebaseMessagingId = firebaseMessagingId ?? '';
         await FirebaseService.updateProfileData(userLogged.firebaseId, userLogged.toFirebaseToken());
-        homeController.setUserLogged(userLogged);
-        snackBar('Login efetuado com sucesso');
-        Get.offAllNamed(Routes.home);
+        if(toHome) {
+          snackBar('Login efetuado com sucesso');
+          Get.offAllNamed(Routes.home);
+        } else {
+          snackBar('Cadastro efetuado com sucesso');
+        }
       } else {
         SignUpController signUpController = Get.find<SignUpController>();
         signUpController.setTextFieldsTemp(profileUser);
@@ -119,7 +121,7 @@ class AuthServices extends GetxService {
   Future<ProfileModel> setUserByFirebaseData(ProfileModel profileData) async {
     userLogged = profileData;
     await FirebaseService.setProfileData(profileData.firebaseId, profileData.toJson());
-    handleSignInAccount(userLogged);
+    handleSignInAccount(userLogged, toHome: false);
     return profileData;
   }
 

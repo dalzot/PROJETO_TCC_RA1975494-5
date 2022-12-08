@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:delivery_servicos/app/global/notification/custom_local_notification.dart';
 import 'package:delivery_servicos/app/modules/chat/models/chat_model.dart';
 import 'package:delivery_servicos/app/modules/chat/models/message_model.dart';
 import 'package:delivery_servicos/app/modules/profile/models/profile_model.dart';
@@ -24,39 +25,51 @@ class ChatController extends GetxController with LoaderMixin {
 
   final allChats = <ChatModel>[].obs;
   ChatModel selectedChat = ChatModel();
+  String? selectedChatId;
 
   @override
   void onInit() {
-    loaderListener(loading);
-
     userLogged = authServices.userLogged;
     super.onInit();
   }
 
   @override
   void onReady() {
+    loading.value = true;
     allMessagesChat.bindStream(loadInitData());
     allChats.bindStream(loadInitChatsData());
+    loading.value = false;
     super.onReady();
   }
 
   Stream<List<ChatModel>> loadInitChatsData() {
-    Stream<QuerySnapshot> streamDocs = FirebaseService.getStreamListChatModelDataById(userLogged.firebaseId);
+    loading.value = true;
+    Stream<QuerySnapshot> streamOwner = FirebaseService.getStreamListChatModelDataByIdOwner(userLogged.firebaseId);
+    Stream<QuerySnapshot> streamReceiver = FirebaseService.getStreamListChatModelDataByIdReceiver(userLogged.firebaseId);
 
-    return streamDocs.map((d) {
-      List<ChatModel> listChats = [];
-      for(final doc in d.docs) {
-        listChats.add(ChatModel.fromJson(doc.data() as Map<String, dynamic>));
-      }
-      return listChats;
-    });
+    return streamOwner.map((d) {
+        List<ChatModel> listChats = [];
+        for(final doc in d.docs) {
+          listChats.add(ChatModel.fromJson(doc.data() as Map<String, dynamic>));
+        }
+        streamReceiver.forEach((d) {
+          for(final doc in d.docs) {
+            listChats.add(ChatModel.fromJson(doc.data() as Map<String, dynamic>));
+          }
+        });
+
+        print('listChats.length: ${listChats.length}');
+        loading.value = false;
+        return listChats;
+      });
   }
 
   Stream<List<MessageModel>> loadInitData() {
-    print('loadInitData: ${selectedChatProfile != null} - $selectedChatProfile');
     if(selectedChatProfile != null) {
-      String chatId = '${userLogged.firebaseId}_${selectedChatProfile!.firebaseId}';
+      String chatId = selectedChatId ?? '${userLogged.firebaseId}_${selectedChatProfile!.firebaseId}';
       Stream<DocumentSnapshot> streamDocs = FirebaseService.getStreamChatModelData(chatId);
+
+      print('chatId: $chatId - $selectedChatId');
 
       return streamDocs.map((d) {
         if(d.exists) {
@@ -86,8 +99,9 @@ class ChatController extends GetxController with LoaderMixin {
     }
   }
 
-  setSelectedChatProfile(ProfileModel profile) async {
+  setSelectedChatProfile(ProfileModel profile, String? chatId) async {
     selectedChatProfile = profile;
+    selectedChatId = chatId;
     allMessagesChat.bindStream(loadInitData());
   }
 
@@ -104,15 +118,22 @@ class ChatController extends GetxController with LoaderMixin {
     if(selectedChat.ownerProfileId == userLogged.firebaseId) {
       selectedChat.ownerMessages.add(newMessage);
       await FirebaseService.updateChatData(selectedChat.chatId, selectedChat.updateOwnerMessages());
+      CustomLocalNotification().sendPrivateMessaging('Nova mensagem recebida',
+          '${selectedChat.ownerName}: ${textMessageController.text.trim()}',
+          selectedChat.chatId,
+          selectedChat.toMessagingId);
     } else if(selectedChat.toProfileId == userLogged.firebaseId) {
-      selectedChat.ownerMessages.add(newMessage);
+      selectedChat.toMessages.add(newMessage);
       await FirebaseService.updateChatData(selectedChat.chatId, selectedChat.updateToMessages());
+      CustomLocalNotification().sendPrivateMessaging('Nova mensagem recebida',
+          '${selectedChat.toName}: ${textMessageController.text.trim()}',
+          selectedChat.chatId,
+          selectedChat.ownerMessagingId);
     } else {
       print('sendMessage Error: ');
     }
     textMessageController.clear();
     setMessageToSent('');
-//    orderMessages(selectedChat);
   }
 
   List<MessageModel> orderMessages(ChatModel chat) {

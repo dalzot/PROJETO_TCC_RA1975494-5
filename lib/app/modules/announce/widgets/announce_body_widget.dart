@@ -47,7 +47,8 @@ class AnnounceBodyWidget extends GetView<AnnounceController> {
                               phoneNumber: getRawPhoneNumber(service.phone1.toString()),
                               phoneNumber2: getRawPhoneNumber(service.phone2 ?? ''))),
                           const SizedBox(width: defaultPadding16),
-                          Expanded(child: LongButton('Compartilhar', ContactButtonType.share, context)),
+                          Expanded(child: LongButton('Compartilhar', ContactButtonType.share, context,
+                              serviceParam: service)),
                         ],
                       ),
                     ],
@@ -69,19 +70,6 @@ class AnnounceBodyWidget extends GetView<AnnounceController> {
 
                   const SizedBox(height: 16,),
                   CurrentObservations(context),
-
-//                  Obx(() => Visibility(
-//                    visible: controller.myProposal.value.status != ProposalModel(status: 'deletada').status
-//                        || myServiceProposal != null,
-//                    child: Column(
-//                      children: [
-//                        const SizedBox(height: 16,),
-//                        CurrentMyProposal(context, myServiceProposal ?? controller.myProposal.value),
-//                      ],
-//                    ),
-//                  )),
-
-//                  const SizedBox(height: 16,),
                 ],
               ),
             ),

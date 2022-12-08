@@ -3,6 +3,7 @@ import 'package:delivery_servicos/app/modules/announce/controller/request_contro
 import 'package:delivery_servicos/app/modules/profile/models/profile_model.dart';
 import 'package:delivery_servicos/core/theme/app_color.dart';
 import 'package:delivery_servicos/routes/routes.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -143,9 +144,9 @@ class AddRequestPage extends GetView<RequestController> {
                   && controller.isValidatedMoneyValues.isTrue
                   && controller.isTermsAccepted.isTrue
                   && controller.createServiceStep.value == 5
-                  ? () {
-                controller.submitServiceToFirebase();
-                Get.back();
+                  ? () async {
+                await controller.submitServiceToFirebase();
+                Get.offAllNamed(Routes.myRequests);
               } : null,
               color: appNormalPrimaryColor,
             ),
@@ -488,6 +489,7 @@ class AddRequestPage extends GetView<RequestController> {
               label: "CEP",
               hintText: '00000-000',
               type: TextInputType.number,
+              textInputAction: TextInputAction.next,
               controller: controller.serviceCepController,
               suffixIcon: IconButton(
                 icon: Icon(Icons.search_rounded,
@@ -509,6 +511,8 @@ class AddRequestPage extends GetView<RequestController> {
                 child: TextFieldWidget(
                     label: "Cidade",
                     type: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    textCapitalization: TextCapitalization.words,
                     controller: controller.serviceCityController,
                     onChanged: (s) => controller.checkToEnableUpdateAddress(),
                     validator: (String value) => value.isEmpty
@@ -520,6 +524,8 @@ class AddRequestPage extends GetView<RequestController> {
                 child: TextFieldWidget(
                     label: "UF",
                     type: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    textCapitalization: TextCapitalization.characters,
                     controller: controller.serviceProvinceController,
                     onChanged: (s) => controller.checkToEnableUpdateAddress(),
                     validator: (String value) => value.isEmpty
@@ -534,6 +540,8 @@ class AddRequestPage extends GetView<RequestController> {
                 child: TextFieldWidget(
                     label: "Logradouro/Rua",
                     type: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    textCapitalization: TextCapitalization.words,
                     controller: controller.serviceStreetController,
                     onChanged: (s) => controller.checkToEnableUpdateAddress(),
                     validator: (String value) => value.isEmpty
@@ -555,12 +563,16 @@ class AddRequestPage extends GetView<RequestController> {
           TextFieldWidget(
               label: "Bairro",
               type: TextInputType.text,
+              textInputAction: TextInputAction.next,
+              textCapitalization: TextCapitalization.words,
               controller: controller.serviceDistrictController,
               validator: (String value) => value.isEmpty
                   ? 'Preencha corretamente' : null),
           TextFieldWidget(
               label: "Complemento",
               type: TextInputType.text,
+              textInputAction: TextInputAction.done,
+              textCapitalization: TextCapitalization.words,
               controller: controller.serviceComplementController,
               onChanged: (s) => controller.checkToEnableUpdateAddress(),
               validator: (String value) => null),
@@ -830,6 +842,7 @@ class AddRequestPage extends GetView<RequestController> {
             maxLines: 7,
             minLines: 7,
             type: TextInputType.multiline,
+            textCapitalization: TextCapitalization.words,
             textInputAction: TextInputAction.newline,
             controller: controller.serviceObservationsController,
             validator: (String value) => null),
@@ -931,6 +944,7 @@ class AddRequestPage extends GetView<RequestController> {
                     child: TextFieldWidget(
                         label: "Valor mínimo",
                         type: TextInputType.number,
+                        textInputAction: TextInputAction.next,
                         controller: controller.serviceMinPriceController,
                         onChanged: controller.setMoneyValues,
                         inputFormatter: [
@@ -939,11 +953,12 @@ class AddRequestPage extends GetView<RequestController> {
                         validator: (String value) => value.isEmpty
                             ? 'Preencha um valor mínimo' : null),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 16),
                   Expanded(
                     child: TextFieldWidget(
                         label: "Valor máximo",
                         type: TextInputType.number,
+                        textInputAction: TextInputAction.done,
                         controller: controller.serviceMaxPriceController,
                         onChanged: controller.setMoneyValues,
                         inputFormatter: [

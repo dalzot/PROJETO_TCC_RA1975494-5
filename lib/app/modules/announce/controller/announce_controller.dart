@@ -10,6 +10,7 @@ import '../../../../core/util/global_functions.dart';
 import '../../../../routes/app_pages.dart';
 import '../../home/controller/home_professional_controller.dart';
 import '../../profile/models/profile_model.dart';
+import '../../profile/models/rate_model.dart';
 import '../model/service_model.dart';
 
 class AnnounceController extends GetxController with LoaderMixin {
@@ -28,11 +29,17 @@ class AnnounceController extends GetxController with LoaderMixin {
   late ProfileModel userLogged;
 
   RxBool isTermsAccepted = false.obs;
+  RxBool isObservationFinal = false.obs;
 
   Rx<ProposalModel>? myProposal;
   RxBool isValidatedProposalPrice = false.obs;
   final proposalObservationsController = TextEditingController();
   final proposalPriceController = TextEditingController();
+  final observationsFinalController = TextEditingController();
+  RxString observationsFinal = ''.obs;
+  RxInt rateService = 0.obs;
+  RxInt ratePrice = 0.obs;
+  RxInt rateProfessional = 0.obs;
 
   @override
   void onInit() {
@@ -96,6 +103,25 @@ class AnnounceController extends GetxController with LoaderMixin {
     isTermsAccepted.value = accepted;
   }
 
+  changeObservationsFinal(obs) {
+    observationsFinal.value = obs;
+    if(obs.isNotEmpty) {
+      isObservationFinal.value = true;
+    } else {
+      isObservationFinal.value = false;
+    }
+  }
+
+  changeRateService(value) {
+    rateService.value = value;
+  }
+  changeRatePrice(value) {
+    ratePrice.value = value;
+  }
+  changeRateProfessional(value) {
+    rateProfessional.value = value;
+  }
+
   submitProposalToClient(ServiceModel service) async {
     loading.value = false;
     loading.value = true;
@@ -117,9 +143,14 @@ class AnnounceController extends GetxController with LoaderMixin {
 
     await FirebaseService.updateServiceData(serviceModel.serviceId, serviceModel.toProposal())
         .then((value) async {
-          userLogged.serviceProposals.add(serviceModel.serviceId);
-          authServices.userLogged = userLogged;
-          await FirebaseService.updateProfileData(userLogged.firebaseId, userLogged.toProposals());
+          ProfileModel profileEdited = authServices.userLogged;
+          List<String> proposalsEdited = List.from(profileEdited.serviceProposals);
+          proposalsEdited.add(serviceModel.serviceId);
+          profileEdited.serviceProposals = proposalsEdited;
+
+          authServices.userLogged = profileEdited;
+          userLogged = profileEdited;
+          await FirebaseService.updateProfileData(userLogged.firebaseId, profileEdited.toProposals());
 
           await CustomLocalNotification().sendPrivateMessaging('Opa! Temos uma proposta para você.',
               "'${userLogged.name.split(' ')[0]}' enviou uma proposta para "
@@ -132,7 +163,7 @@ class AnnounceController extends GetxController with LoaderMixin {
           reloadMyProposal();
     });
     loading.value = false;
-    Get.toNamed(Routes.home);
+//    Get.offAllNamed(Routes.home);
     snackBar('Proposta enviada com sucesso');
   }
 
@@ -157,7 +188,7 @@ class AnnounceController extends GetxController with LoaderMixin {
       reloadMyProposal();
     });
     loading.value = false;
-    Get.toNamed(Routes.home);
+    Get.offAllNamed(Routes.myServices);
     snackBar('Proposta removida com sucesso');
   }
 
@@ -189,12 +220,16 @@ class AnnounceController extends GetxController with LoaderMixin {
       }
     }
     serviceParam.proposals = proposalsEdited;
-    serviceParam.professionalId = proposal.professionalId.toString();
     serviceParam.dateUpdated = dateNowString();
-    serviceParam.status = 'executando';
+    if(acceptOrRecuse) {
+      serviceParam.professionalId = proposal.professionalId.toString();
+      serviceParam.status = 'executando';
+    }
+    print('acceptOrRecuse: $acceptOrRecuse - ${serviceParam.toProposalAccept()}');
 
-    await FirebaseService.updateServiceData(serviceParam.serviceId, serviceParam.toProposal())
-        .then((value) async {
+    await FirebaseService.updateServiceData(serviceParam.serviceId,
+        acceptOrRecuse ? serviceParam.toProposalAccept() : serviceParam.toProposal()
+    ).then((value) async {
       await CustomLocalNotification().sendPrivateMessaging(
           acceptOrRecuse ? 'Eba! Sua proposta foi aprovada 😃' : 'Ahh! Sua proposta foi recusada 😏',
           "'${userLogged.name.split(' ')[0]}' ${acceptOrRecuse ? 'aprovou' : 'recusou'} sua proposta no serviço "
@@ -205,6 +240,47 @@ class AnnounceController extends GetxController with LoaderMixin {
     });
     myServicesProposals.value = serviceParam.proposals;
     loading.value = false;
+  }
+
+  finalizeOrRateService(ServiceModel serviceParam, bool finalizeOrRate) async {
+    loading.value = true;
+
+    serviceParam.dateUpdated = dateNowString();
+    serviceParam.status = finalizeOrRate ? 'avaliar' : 'finalizado';
+    if(finalizeOrRate) {
+      serviceParam.observationsFinal = observationsFinal.value;
+    }
+
+    await FirebaseService.updateServiceData(serviceParam.serviceId, serviceParam.toFinalize())
+        .then((value) async {
+          ProfileModel professionalProfile = await FirebaseService.getProfileModelData(serviceParam.professionalId);
+          if(!finalizeOrRate) {
+            professionalProfile.allRates.add(RateModel(
+              rateService: rateService.value,
+              ratePrice: ratePrice.value,
+              rateProfessional: rateProfessional.value,
+            ));
+            await FirebaseService.updateProfileData(professionalProfile.firebaseId, professionalProfile.toUpdateRates());
+          }
+          await CustomLocalNotification().sendPrivateMessaging(
+            finalizeOrRate ? 'Seu serviço foi finalizado!' : 'Parabéns, você recebeu uma avaliação!',
+            finalizeOrRate
+                ? "'${professionalProfile.name.toString().split(' ')[0]}' "
+                "finalizou seu serviço e está aguardando sua avaliação.\nAcesse o app para avaliá-lo."
+                : "'${serviceParam.clientName.toString().split(' ')[0]}' "
+                "enviou a avaliação do seu serviço prestado.\nAcesse o app para visualizar.",
+            serviceParam.serviceId.toString(),
+            finalizeOrRate
+                ? serviceParam.clientMessagingId.toString()
+                : professionalProfile.firebaseMessagingId);
+          await homeProfessionalController.getServicesByFilters();
+    });
+    loading.value = false;
+    if(finalizeOrRate) {
+      Get.offAllNamed(Routes.myServices);
+    } else {
+      Get.offAllNamed(Routes.myRequests);
+    }
   }
 
   bool checkMyProposal() {
