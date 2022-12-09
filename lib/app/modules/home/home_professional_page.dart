@@ -49,7 +49,7 @@ class HomeProfessionalPage extends GetView<HomeProfessionalController> {
             onPressed: () {
               openModalBottomSheet(
                 context,
-                title: 'Filtro de Profissionais',
+                title: 'Filtro de Serviços',
                 onTapButton: () {
                   Get.back();
                   controller.getServicesByFilters();

@@ -114,7 +114,7 @@ class HomeClientPage extends GetView<HomeClientController> {
             )),
           Obx(() => Visibility(
             visible: controller.closeBannerMessage.isTrue && controller.filteringEnabled.isFalse,
-            child: BannerText('Use os filtros para pesquisar por serviços',
+            child: BannerText('Use os filtros para pesquisar por profissionais',
                 onClose: () => controller.setCloseBannerMessage()),
           )),
           ListProfessionalsFiltereds()

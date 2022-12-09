@@ -11,6 +11,7 @@ class HomePage extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    print('checkUserType(${controller.userLogged.profileType}): ${checkUserType(controller.userLogged.profileType)}');
     return checkUserType(controller.userLogged.profileType)
         ? const HomeProfessionalPage() : const HomeClientPage();
   }

@@ -46,6 +46,16 @@ class AuthServices extends GetxService {
         userLogged = profileUser;
         userLogged.firebaseMessagingId = firebaseMessagingId ?? '';
         await FirebaseService.updateProfileData(userLogged.firebaseId, userLogged.toFirebaseToken());
+
+        if(HomeController().initialized) {
+          HomeController homeController = Get.find();
+          homeController.setUserLogged(userLogged);
+        } else {
+          Get.lazyPut<HomeController>(() => HomeController());
+          HomeController homeController = Get.find();
+          homeController.setUserLogged(userLogged);
+        }
+
         if(toHome) {
           snackBar('Login efetuado com sucesso');
           Get.offAllNamed(Routes.home);
